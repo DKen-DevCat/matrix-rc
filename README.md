@@ -58,6 +58,12 @@ cd firmware && make sim && ./build/sim --token 同じトークン --jpeg 何か�
 cd firmware && pio run -t upload && pio device monitor
 ```
 
+## 計画
+
+| 日付 | 内容 |
+|---|---|
+| [2026-10-25](docs/plan-phase1a.md) | Phase 1-a の購入計画（店・金額）と、注文前に決めてほしいこと |
+
 ## レビュー
 
 | 日付 | 内容 |
