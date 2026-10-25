@@ -16,7 +16,7 @@
 
 | フェーズ | 内容 | 状態 |
 |---|---|---|
-| 1-a Wi-Fiモデル | XIAO ESP32S3 Sense を自宅 Wi-Fi で机上で動かす（操作・映像・音声・ラグ計測） | 部品の注文前 |
+| 1-a Wi-Fiモデル | XIAO ESP32S3 Sense を自宅 Wi-Fi で机上で動かす（操作・映像・音声・ラグ計測） | ソフト作成済み（シミュレータで確認）・部品の注文前 |
 | 1-b1 LTE 化 | 1-a の車台のまま、技適済み LTE Cat.1 bis＋GPS＋東京の VPS に載せ替える | 未着手 |
 | 1-b2 ジャンプ単体試作 | ばね＋渦巻きカム＋高減速 N20 を単体で試作し、助走付きで 3cm の段差を越えることを確認する | 未着手 |
 | 1-b3 組み上げモデル | 1-b1 と 1-b2 の結果をもとに、名刺サイズの2段構造に統合する | 未着手 |
@@ -30,10 +30,32 @@
 ```
 web/        ブラウザの操作画面（キー状態を 50Hz で送信、映像・音声・遅延を表示）
 server/     中継サーバ（Node.js。1-a は PC 内、1-b からは東京の VPS）
-firmware/   機体のファームウェア（XIAO ESP32S3 Sense）
+firmware/   機体のファームウェア（XIAO ESP32S3 Sense）。lib/core が判断ロジック、sim/ が PC 上のシミュレータ
 docs/drawings/      図面（W=Wi-Fiモデル、C=組み上げモデル、R=中継ペア）の SVG と PNG
 docs/drawings/src/  図面の生成スクリプト
 docs/review-*.md    設計レビューの記録
+```
+
+## ソフトの動かし方（Phase 1-a）
+
+通信の取り決めは [docs/protocol.md](docs/protocol.md)。ブラウザ・サーバ（`web/js/protocol.js`）と機体（`firmware/lib/core/protocol.h`）は同じテストベクタで一致を確かめている。
+
+```sh
+# テスト（依存パッケージなし。Node.js 22 以上と C++17 のコンパイラ）
+(cd server && npm test)
+(cd firmware && make test)
+
+# 中継サーバ（操作画面は http://127.0.0.1:8080/ 。機体からの UDP は 9000 番）
+cd server && MRC_TOKEN=好きな8〜16文字 npm start
+
+# 部品が届く前は PC 上の機体シミュレータで通しを試せる（判断ロジックは実機と同じ lib/core）
+cd firmware && make sim && ./build/sim --token 同じトークン --jpeg 何かの.jpg [--loss 0.2]
+```
+
+実機への書き込みは PlatformIO を使う（`firmware/src/secrets.h.example` を `secrets.h` にコピーして Wi-Fi とサーバの値を入れる）。
+
+```sh
+cd firmware && pio run -t upload && pio device monitor
 ```
 
 ## レビュー

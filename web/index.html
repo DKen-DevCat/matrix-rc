@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>matrix-rc 操作画面</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>matrix-rc</h1>
+  <form id="login">
+    <label>トークン <input id="token" type="password" autocomplete="off" required></label>
+    <label>機体 <select id="device"><option value="1">1</option><option value="2">2</option></select></label>
+    <button id="connect">接続</button>
+  </form>
+  <div id="status" class="pill">未接続</div>
+  <button id="claim" hidden>操作権を取る</button>
+</header>
+
+<main>
+  <section class="view">
+    <canvas id="video" width="320" height="240"></canvas>
+    <div id="overlay" class="overlay">映像なし</div>
+  </section>
+
+  <aside>
+    <div class="keys">
+      <span></span><kbd data-k="KeyW">W</kbd><span></span>
+      <kbd data-k="KeyA">A</kbd><kbd data-k="KeyS">S</kbd><kbd data-k="KeyD">D</kbd>
+      <kbd data-k="Space" class="space">Space</kbd>
+    </div>
+
+    <dl class="stats">
+      <dt>往復遅延</dt><dd id="rtt">—</dd>
+      <dt>映像</dt><dd id="fps">—</dd>
+      <dt>電池</dt><dd id="vbat">—</dd>
+      <dt>受信強度</dt><dd id="rssi">—</dd>
+      <dt>ジャンプ</dt><dd id="jump">—</dd>
+      <dt>機体</dt><dd id="flags">—</dd>
+    </dl>
+
+    <button id="audio" disabled>音声を聞く</button>
+    <p class="note">録画・録音はしません。音声はこの画面で再生するだけです。</p>
+
+    <div class="stopwatch">
+      <div id="clock">0.000</div>
+      <p class="note">体感ラグの計測用（設計書① 7章）。この時計と映像を一緒にスロー撮影し、キーを押した瞬間から映像が動くまでのコマ数を数える。</p>
+    </div>
+  </aside>
+</main>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
