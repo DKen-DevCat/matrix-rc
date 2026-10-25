@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="640" viewBox="0 0 1240 640" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN',sans-serif">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<defs>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2933"/></marker>
+<marker id="arrb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3b6fd8"/></marker>
+<marker id="arro" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d9822b"/></marker>
+<marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f9e57"/></marker>
+<marker id="arrr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d64545"/></marker>
+<marker id="dim" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" fill="#6b7280"/></marker>
+<pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#868e96" stroke-width="1"/></pattern>
+</defs>
+<text x="24" y="38" font-size="22" text-anchor="start" font-weight="bold" fill="#1f2933">W1  システム構成図 ― Wi-Fiモデル（Phase 1-a）</text>
+<text x="24" y="62" font-size="13" text-anchor="start" font-weight="normal" fill="#6b7280">自宅のWi-Fiだけで、PCのキー操作 → 機体の走行・ジャンプ → 映像・音声の返送までを一通り通す</text>
+<rect x="30" y="100" width="470" height="330" rx="12" fill="#fafbff" stroke="#3b6fd8" stroke-width="1.4" stroke-dasharray="7 5" fill-opacity="1"/>
+<text x="46" y="124" font-size="14" text-anchor="start" font-weight="bold" fill="#3b6fd8">操作用PC（自宅）</text>
+<rect x="50" y="145" width="200" height="250" rx="8" fill="#e8f0fe" stroke="#3b6fd8" stroke-width="1.5" fill-opacity="1"/>
+<text x="150.0" y="226.375" font-size="14" text-anchor="middle" font-weight="bold" fill="#1f2933">ブラウザ（操作画面）</text>
+<text x="150.0" y="248.37499999999997" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">W/A/S/D・Space を検出</text>
+<text x="150.0" y="267.22499999999997" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">押下状態を 50Hz で送信</text>
+<text x="150.0" y="286.075" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">映像・音声を再生</text>
+<text x="150.0" y="304.92499999999995" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">ラグ・電池・経路を表示</text>
+<text x="150.0" y="323.775" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">雑音除去（任意）</text>
+<rect x="280" y="145" width="200" height="250" rx="8" fill="#e8f0fe" stroke="#3b6fd8" stroke-width="1.5" fill-opacity="1"/>
+<text x="380.0" y="226.375" font-size="14" text-anchor="middle" font-weight="bold" fill="#1f2933">中継サーバ</text>
+<text x="380.0" y="248.37499999999997" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">Node.js（同じPCで起動）</text>
+<text x="380.0" y="267.22499999999997" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">ブラウザ ⇄ 機体を中継</text>
+<text x="380.0" y="286.075" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">共有トークンで認証</text>
+<text x="380.0" y="304.92499999999995" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">往復遅延の計測・記録</text>
+<text x="380.0" y="323.775" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">経路を複数持てる作り</text>
+<line x1="250" y1="230" x2="280" y2="230" stroke="#3b6fd8" stroke-width="2" marker-end="url(#arrb)"/>
+<line x1="280" y1="300" x2="250" y2="300" stroke="#3b6fd8" stroke-width="2" marker-end="url(#arrb)"/>
+<rect x="250.0" y="209" width="30" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="265" y="220" font-size="11" text-anchor="middle" font-weight="normal" fill="#3b6fd8">操作</text>
+<rect x="250.0" y="311" width="30" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="265" y="322" font-size="11" text-anchor="middle" font-weight="normal" fill="#3b6fd8">映像</text>
+<text x="265" y="412" font-size="11" text-anchor="middle" font-weight="normal" fill="#6b7280">WebSocket（PC内）</text>
+<rect x="570" y="205" width="150" height="110" rx="8" fill="#f1f3f5" stroke="#868e96" stroke-width="1.5" fill-opacity="1"/>
+<text x="645.0" y="244.65" font-size="14" text-anchor="middle" font-weight="bold" fill="#1f2933">自宅Wi-Fiルーター</text>
+<text x="645.0" y="266.65" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">2.4GHz</text>
+<text x="645.0" y="285.5" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">（家庭用でOK）</text>
+<line x1="480" y1="235" x2="570" y2="235" stroke="#d9822b" stroke-width="2" marker-end="url(#arro)"/>
+<line x1="570" y1="285" x2="480" y2="285" stroke="#2f9e57" stroke-width="2" marker-end="url(#arrg)"/>
+<line x1="720" y1="235" x2="800" y2="235" stroke="#d9822b" stroke-width="2" marker-end="url(#arro)"/>
+<line x1="800" y1="285" x2="720" y2="285" stroke="#2f9e57" stroke-width="2" marker-end="url(#arrg)"/>
+<rect x="496.8" y="214" width="56.4" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="525" y="225" font-size="11" text-anchor="middle" font-weight="normal" fill="#d9822b">UDP 操作</text>
+<rect x="742.8" y="214" width="34.4" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="760" y="225" font-size="11" text-anchor="middle" font-weight="normal" fill="#d9822b">50Hz</text>
+<rect x="496.8" y="294" width="56.4" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="525" y="305" font-size="11" text-anchor="middle" font-weight="normal" fill="#2f9e57">UDP 映像</text>
+<rect x="728.5" y="294" width="63" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="760" y="305" font-size="11" text-anchor="middle" font-weight="normal" fill="#2f9e57">音声・状態</text>
+<rect x="800" y="95" width="410" height="420" rx="12" fill="#fffaf3" stroke="#d9822b" stroke-width="1.4" stroke-dasharray="7 5" fill-opacity="1"/>
+<text x="816" y="119" font-size="14" text-anchor="start" font-weight="bold" fill="#d9822b">機体（Seeed XIAO ESP32S3 Sense）</text>
+<rect x="820" y="140" width="90" height="48" rx="8" fill="#fff1e0" stroke="#d9822b" stroke-width="1.5" fill-opacity="1"/>
+<text x="865.0" y="159.275" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">カメラ</text>
+<text x="865.0" y="178.525" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">OV3660</text>
+<rect x="820" y="200" width="90" height="48" rx="8" fill="#fff1e0" stroke="#d9822b" stroke-width="1.5" fill-opacity="1"/>
+<text x="865.0" y="219.275" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">マイク</text>
+<text x="865.0" y="238.525" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">デジタルMEMS</text>
+<rect x="960" y="140" width="230" height="108" rx="8" fill="#fff1e0" stroke="#d9822b" stroke-width="1.5" fill-opacity="1"/>
+<text x="1075.0" y="171.4" font-size="14" text-anchor="middle" font-weight="bold" fill="#1f2933">ESP32-S3（制御）</text>
+<text x="1075.0" y="192.3" font-size="12" text-anchor="middle" font-weight="normal" fill="#374151">操作の受信・停止判定</text>
+<text x="1075.0" y="209.7" font-size="12" text-anchor="middle" font-weight="normal" fill="#374151">映像 MJPEG 320×240</text>
+<text x="1075.0" y="227.1" font-size="12" text-anchor="middle" font-weight="normal" fill="#374151">音声 16kHz・状態送信</text>
+<line x1="910" y1="164" x2="960" y2="164" stroke="#1f2933" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="910" y1="224" x2="960" y2="224" stroke="#1f2933" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="820" y="290" width="170" height="50" rx="8" fill="#f1f3f5" stroke="#868e96" stroke-width="1.5" fill-opacity="1"/>
+<text x="905.0" y="310.275" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">DRV8833</text>
+<text x="905.0" y="329.5249999999999" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">モータードライバ</text>
+<rect x="820" y="360" width="170" height="50" rx="8" fill="#f1f3f5" stroke="#868e96" stroke-width="1.5" fill-opacity="1"/>
+<text x="905.0" y="380.275" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">走行モーター ×2</text>
+<text x="905.0" y="399.5249999999999" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">N20 約300rpm</text>
+<rect x="1020" y="290" width="170" height="50" rx="8" fill="#f1f3f5" stroke="#868e96" stroke-width="1.5" fill-opacity="1"/>
+<text x="1105.0" y="310.275" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">MOSFET（AO3400）</text>
+<text x="1105.0" y="329.5249999999999" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">一方向スイッチ</text>
+<rect x="1020" y="360" width="170" height="50" rx="8" fill="#f1f3f5" stroke="#868e96" stroke-width="1.5" fill-opacity="1"/>
+<text x="1105.0" y="380.275" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">ジャンプ用モーター</text>
+<text x="1105.0" y="399.5249999999999" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">N20 高減速＋渦巻きカム</text>
+<rect x="1020" y="430" width="170" height="50" rx="8" fill="#f1f3f5" stroke="#868e96" stroke-width="1.5" fill-opacity="1"/>
+<text x="1105.0" y="450.275" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">カム位置スイッチ</text>
+<text x="1105.0" y="469.5249999999999" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">縮みきりを検知</text>
+<rect x="820" y="430" width="170" height="50" rx="8" fill="#f1f3f5" stroke="#868e96" stroke-width="1.5" fill-opacity="1"/>
+<text x="905.0" y="450.275" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">状態LED WS2812B</text>
+<text x="905.0" y="469.5249999999999" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">撮影中・経路・電池</text>
+<polyline points="1020,248 1020,270 905,270 905,290" fill="none" stroke="#1f2933" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arr)"/>
+<line x1="1105" y1="248" x2="1105" y2="290" stroke="#1f2933" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="905" y1="340" x2="905" y2="360" stroke="#1f2933" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="1105" y1="340" x2="1105" y2="360" stroke="#1f2933" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="1105" y1="430" x2="1105" y2="410" stroke="#1f2933" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="1112" y="424" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">カムで押す</text>
+<rect x="30" y="455" width="740" height="102.0" rx="6" fill="#fffbea" stroke="#e0b100" stroke-width="1.2" fill-opacity="1"/>
+<text x="42" y="475" font-size="13" text-anchor="start" font-weight="bold" fill="#1f2933">設計のポイント</text>
+<text x="42" y="495.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・機体は自分からサーバへ接続する（機体側で待ち受けない）。1-b でもこの形を変えない。</text>
+<text x="42" y="513.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・操作は「今押されているキー」を 50Hz で送り続ける。300ms 届かなければ機体が自分で停止する。</text>
+<text x="42" y="531.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・1-b では「自宅Wi-Fi＋PC内サーバ」を「LTE＋東京のVPS」に差し替えるだけで済む作りにする。</text>
+<text x="42" y="549.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・電池は保護回路付きリポ 1S 1000mAh。ブザーの代わりに走行モーターを鳴らして音を出す。</text>
+<rect x="796" y="560" width="430" height="66" rx="0" fill="#fff" stroke="#1f2933" stroke-width="1.2" fill-opacity="1"/>
+<line x1="906" y1="560" x2="906" y2="626" stroke="#1f2933" stroke-width="0.8"/>
+<line x1="796" y1="593" x2="906" y2="593" stroke="#1f2933" stroke-width="0.8"/>
+<line x1="906" y1="600" x2="1226" y2="600" stroke="#1f2933" stroke-width="0.8"/>
+<text x="804" y="574" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">図番</text>
+<text x="851" y="587" font-size="14" text-anchor="middle" font-weight="bold" fill="#1f2933">W1</text>
+<text x="804" y="607" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">単位</text>
+<text x="866" y="619" font-size="12" text-anchor="middle" font-weight="normal" fill="#1f2933">mm</text>
+<text x="914" y="574" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">遠隔操作チョロQ</text>
+<text x="914" y="593" font-size="15" text-anchor="start" font-weight="bold" fill="#1f2933">システム構成図（Wi-Fiモデル）</text>
+<text x="914" y="617" font-size="11" text-anchor="start" font-weight="normal" fill="#6b7280">尺度 NTS（尺度なし）   作成 2026-10-25</text>
+</svg>

@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="840" viewBox="0 0 1240 840" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN',sans-serif">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<defs>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2933"/></marker>
+<marker id="arrb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3b6fd8"/></marker>
+<marker id="arro" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d9822b"/></marker>
+<marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f9e57"/></marker>
+<marker id="arrr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d64545"/></marker>
+<marker id="dim" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" fill="#6b7280"/></marker>
+<pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#868e96" stroke-width="1"/></pattern>
+</defs>
+<text x="24" y="38" font-size="22" text-anchor="start" font-weight="bold" fill="#1f2933">R3  シーケンス図 ― 中継ペアモデル</text>
+<text x="24" y="62" font-size="13" text-anchor="start" font-weight="normal" fill="#6b7280">B が近いとき・B が離れたとき・どの経路も途絶えたとき の3場面。経路を切り替える処理はどこにもない</text>
+<rect x="35" y="80" width="150" height="36" rx="6" fill="#fff" stroke="#3b6fd8" stroke-width="1.6" fill-opacity="1"/>
+<text x="110" y="104" font-size="13" text-anchor="middle" font-weight="bold" fill="#3b6fd8">操作用PC</text>
+<line x1="110" y1="116" x2="110" y2="760" stroke="#868e96" stroke-width="1.2" stroke-dasharray="5 4"/>
+<rect x="285" y="80" width="150" height="36" rx="6" fill="#fff" stroke="#3b6fd8" stroke-width="1.6" fill-opacity="1"/>
+<text x="360" y="104" font-size="13" text-anchor="middle" font-weight="bold" fill="#3b6fd8">中継サーバ</text>
+<line x1="360" y1="116" x2="360" y2="760" stroke="#868e96" stroke-width="1.2" stroke-dasharray="5 4"/>
+<rect x="565" y="80" width="150" height="36" rx="6" fill="#fff" stroke="#d9822b" stroke-width="1.6" fill-opacity="1"/>
+<text x="640" y="104" font-size="13" text-anchor="middle" font-weight="bold" fill="#d9822b">機体B（中継）</text>
+<line x1="640" y1="116" x2="640" y2="760" stroke="#868e96" stroke-width="1.2" stroke-dasharray="5 4"/>
+<rect x="875" y="80" width="150" height="36" rx="6" fill="#fff" stroke="#3b6fd8" stroke-width="1.6" fill-opacity="1"/>
+<text x="950" y="104" font-size="13" text-anchor="middle" font-weight="bold" fill="#3b6fd8">機体A</text>
+<line x1="950" y1="116" x2="950" y2="760" stroke="#868e96" stroke-width="1.2" stroke-dasharray="5 4"/>
+<rect x="20" y="130" width="1200" height="210" rx="6" fill="#f4fbf6" stroke="#2f9e57" stroke-width="0.8" stroke-dasharray="4 3" fill-opacity="1"/>
+<text x="32" y="150" font-size="12" text-anchor="start" font-weight="bold" fill="#2f9e57">場面1：B が近くにいる</text>
+<line x1="110" y1="180" x2="360" y2="180" stroke="#3b6fd8" stroke-width="1.8" marker-end="url(#arrb)"/>
+<rect x="182.6" y="163" width="104.8" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="235.0" y="174" font-size="11" text-anchor="middle" font-weight="normal" fill="#3b6fd8">キー状態 seq=101</text>
+<line x1="360" y1="205" x2="640" y2="205" stroke="#2f9e57" stroke-width="1.8" marker-end="url(#arrg)"/>
+<rect x="452.0" y="188" width="96.0" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="500.0" y="199" font-size="11" text-anchor="middle" font-weight="normal" fill="#2f9e57">seq=101（LTE）</text>
+<line x1="640" y1="230" x2="950" y2="230" stroke="#7c4dd6" stroke-width="1.8"/>
+<rect x="733.8" y="213" width="122.39999999999999" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="795.0" y="224" font-size="11" text-anchor="middle" font-weight="normal" fill="#7c4dd6">seq=101（ESP-NOW）</text>
+<polygon points="942,224 954,230 942,236" fill="#7c4dd6"/>
+<text x="960" y="234" font-size="11" text-anchor="start" font-weight="normal" fill="#2f9e57">45ms で到着 → 採用</text>
+<line x1="360" y1="290" x2="950" y2="290" stroke="#d64545" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrr)"/>
+<rect x="575.1" y="273" width="159.79999999999998" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="655.0" y="284" font-size="11" text-anchor="middle" font-weight="normal" fill="#d64545">seq=101（A の LTE・遅い）</text>
+<text x="960" y="294" font-size="11" text-anchor="start" font-weight="normal" fill="#d64545">180ms で到着 → 重複なので捨てる</text>
+<rect x="20" y="360" width="1200" height="170" rx="6" fill="#fff8f0" stroke="#d9822b" stroke-width="0.8" stroke-dasharray="4 3" fill-opacity="1"/>
+<text x="32" y="380" font-size="12" text-anchor="start" font-weight="bold" fill="#d9822b">場面2：B が離れた（ESP-NOW が届かない）</text>
+<line x1="110" y1="410" x2="360" y2="410" stroke="#3b6fd8" stroke-width="1.8" marker-end="url(#arrb)"/>
+<rect x="207.9" y="393" width="54.199999999999996" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="235.0" y="404" font-size="11" text-anchor="middle" font-weight="normal" fill="#3b6fd8">seq=102</text>
+<line x1="360" y1="435" x2="640" y2="435" stroke="#2f9e57" stroke-width="1.8" marker-end="url(#arrg)"/>
+<rect x="472.9" y="418" width="54.199999999999996" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="500.0" y="429" font-size="11" text-anchor="middle" font-weight="normal" fill="#2f9e57">seq=102</text>
+<line x1="640" y1="460" x2="780" y2="460" stroke="#7c4dd6" stroke-width="1.8" stroke-dasharray="3 3"/>
+<text x="790" y="465" font-size="12" text-anchor="start" font-weight="bold" fill="#d64545">✕ 届かない</text>
+<line x1="360" y1="495" x2="950" y2="495" stroke="#d64545" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrr)"/>
+<rect x="591.6" y="478" width="126.8" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="655.0" y="489" font-size="11" text-anchor="middle" font-weight="normal" fill="#d64545">seq=102（A の LTE）</text>
+<text x="960" y="499" font-size="11" text-anchor="start" font-weight="normal" fill="#d9822b">180ms で到着 → 採用（ラグが戻るだけ）</text>
+<rect x="20" y="550" width="1200" height="190" rx="6" fill="#fdf2f2" stroke="#d64545" stroke-width="0.8" stroke-dasharray="4 3" fill-opacity="1"/>
+<text x="32" y="570" font-size="12" text-anchor="start" font-weight="bold" fill="#d64545">場面3：どの経路も途絶えた</text>
+<line x1="110" y1="600" x2="360" y2="600" stroke="#3b6fd8" stroke-width="1.8" marker-end="url(#arrb)"/>
+<rect x="207.9" y="583" width="54.199999999999996" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="235.0" y="594" font-size="11" text-anchor="middle" font-weight="normal" fill="#3b6fd8">seq=103</text>
+<line x1="360" y1="625" x2="560" y2="625" stroke="#d64545" stroke-width="1.8" stroke-dasharray="3 3"/>
+<text x="570" y="630" font-size="13" text-anchor="start" font-weight="bold" fill="#d64545">✕</text>
+<line x1="360" y1="650" x2="760" y2="650" stroke="#d64545" stroke-width="1.8" stroke-dasharray="3 3"/>
+<text x="770" y="655" font-size="13" text-anchor="start" font-weight="bold" fill="#d64545">✕</text>
+<rect x="880" y="670" width="300" height="56" rx="6" fill="#fdecec" stroke="#d64545" stroke-width="1.5" fill-opacity="1"/>
+<text x="1030" y="693" font-size="12" text-anchor="middle" font-weight="bold" fill="#d64545">最後の受信から 300ms → 自分で停止</text>
+<text x="1030" y="712" font-size="11" text-anchor="middle" font-weight="normal" fill="#d64545">LED 赤点滅・モーターで警告音</text>
+<line x1="950" y1="610" x2="950" y2="670" stroke="#d64545" stroke-width="3"/>
+<rect x="796" y="760" width="430" height="66" rx="0" fill="#fff" stroke="#1f2933" stroke-width="1.2" fill-opacity="1"/>
+<line x1="906" y1="760" x2="906" y2="826" stroke="#1f2933" stroke-width="0.8"/>
+<line x1="796" y1="793" x2="906" y2="793" stroke="#1f2933" stroke-width="0.8"/>
+<line x1="906" y1="800" x2="1226" y2="800" stroke="#1f2933" stroke-width="0.8"/>
+<text x="804" y="774" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">図番</text>
+<text x="851" y="787" font-size="14" text-anchor="middle" font-weight="bold" fill="#1f2933">R3</text>
+<text x="804" y="807" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">単位</text>
+<text x="866" y="819" font-size="12" text-anchor="middle" font-weight="normal" fill="#1f2933">mm</text>
+<text x="914" y="774" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">遠隔操作チョロQ</text>
+<text x="914" y="793" font-size="15" text-anchor="start" font-weight="bold" fill="#1f2933">シーケンス図（中継ペア）</text>
+<text x="914" y="817" font-size="11" text-anchor="start" font-weight="normal" fill="#6b7280">尺度 NTS（尺度なし）   作成 2026-10-25</text>
+</svg>

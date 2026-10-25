@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="680" viewBox="0 0 1240 680" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN',sans-serif">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<defs>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2933"/></marker>
+<marker id="arrb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3b6fd8"/></marker>
+<marker id="arro" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d9822b"/></marker>
+<marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f9e57"/></marker>
+<marker id="arrr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d64545"/></marker>
+<marker id="dim" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" fill="#6b7280"/></marker>
+<pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#868e96" stroke-width="1"/></pattern>
+</defs>
+<text x="24" y="38" font-size="22" text-anchor="start" font-weight="bold" fill="#1f2933">C1  システム構成図 ― 組み上げモデル（Phase 1-b）</text>
+<text x="24" y="62" font-size="13" text-anchor="start" font-weight="normal" fill="#6b7280">自宅Wi-Fi＋PC内サーバ を「携帯回線（LTE）＋東京のVPS」に差し替える。機体は名刺サイズに組み上げる</text>
+<rect x="30" y="150" width="210" height="230" rx="8" fill="#e8f0fe" stroke="#3b6fd8" stroke-width="1.5" fill-opacity="1"/>
+<text x="135.0" y="221.375" font-size="14" text-anchor="middle" font-weight="bold" fill="#1f2933">操作用PC（どこでも）</text>
+<text x="135.0" y="243.37499999999997" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">ブラウザ（操作画面）</text>
+<text x="135.0" y="262.22499999999997" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">W1 と同じ画面</text>
+<text x="135.0" y="281.075" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">キー状態を 50Hz 送信</text>
+<text x="135.0" y="299.92499999999995" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">映像・音声・GPS 位置</text>
+<text x="135.0" y="318.775" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">経路と遅延を表示</text>
+<rect x="330" y="150" width="230" height="230" rx="8" fill="#e8f0fe" stroke="#3b6fd8" stroke-width="1.5" fill-opacity="1"/>
+<text x="445.0" y="221.375" font-size="14" text-anchor="middle" font-weight="bold" fill="#1f2933">中継サーバ（東京VPS）</text>
+<text x="445.0" y="243.37499999999997" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">Node.js（W1 と同じ）</text>
+<text x="445.0" y="262.22499999999997" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">操作者ログイン・1台1人</text>
+<text x="445.0" y="281.075" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">機体ごとの鍵で認証</text>
+<text x="445.0" y="299.92499999999995" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">連番で古い命令を拒否</text>
+<text x="445.0" y="318.775" font-size="13" text-anchor="middle" font-weight="normal" fill="#374151">ログ（録画・録音しない）</text>
+<line x1="240" y1="230" x2="330" y2="230" stroke="#3b6fd8" stroke-width="2" marker-end="url(#arrb)"/>
+<line x1="330" y1="300" x2="240" y2="300" stroke="#3b6fd8" stroke-width="2" marker-end="url(#arrb)"/>
+<rect x="271.1" y="209" width="27.799999999999997" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="285" y="220" font-size="11" text-anchor="middle" font-weight="normal" fill="#3b6fd8">TLS</text>
+<text x="285" y="330" font-size="10" text-anchor="middle" font-weight="normal" fill="#6b7280">WebSocket</text>
+<text x="285" y="345" font-size="10" text-anchor="middle" font-weight="normal" fill="#6b7280">（インターネット）</text>
+<rect x="650" y="190" width="150" height="150" rx="8" fill="#f1f3f5" stroke="#868e96" stroke-width="1.5" fill-opacity="1"/>
+<text x="725.0" y="244.325" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">携帯網・基地局</text>
+<text x="725.0" y="263.575" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">ドコモ or au</text>
+<text x="725.0" y="279.525" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">（会場の実測で決定）</text>
+<text x="725.0" y="295.47499999999997" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">800MHz 帯を優先</text>
+<line x1="560" y1="235" x2="650" y2="235" stroke="#d9822b" stroke-width="2" marker-end="url(#arro)"/>
+<line x1="650" y1="295" x2="560" y2="295" stroke="#2f9e57" stroke-width="2" marker-end="url(#arrg)"/>
+<rect x="576.8" y="214" width="56.4" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="605" y="225" font-size="11" text-anchor="middle" font-weight="normal" fill="#d9822b">UDP 操作</text>
+<rect x="571.3" y="307" width="67.4" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="605" y="318" font-size="11" text-anchor="middle" font-weight="normal" fill="#2f9e57">UDP 映像等</text>
+<text x="605" y="360" font-size="10" text-anchor="middle" font-weight="normal" fill="#6b7280">AES-GCM で暗号化</text>
+<line x1="800" y1="235" x2="870" y2="235" stroke="#d9822b" stroke-width="2" marker-end="url(#arro)"/>
+<line x1="870" y1="295" x2="800" y2="295" stroke="#2f9e57" stroke-width="2" marker-end="url(#arrg)"/>
+<rect x="821.1" y="214" width="27.799999999999997" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="835" y="225" font-size="11" text-anchor="middle" font-weight="normal" fill="#d9822b">LTE</text>
+<rect x="870" y="95" width="350" height="440" rx="12" fill="#fffaf3" stroke="#d9822b" stroke-width="1.4" stroke-dasharray="7 5" fill-opacity="1"/>
+<text x="886" y="119" font-size="14" text-anchor="start" font-weight="bold" fill="#d9822b">機体（名刺サイズ 91×55mm）</text>
+<rect x="890" y="140" width="310" height="70" rx="8" fill="#f1eafd" stroke="#7c4dd6" stroke-width="1.5" fill-opacity="1"/>
+<text x="1045.0" y="170.275" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">LTE Cat.1 bis（技適済み）</text>
+<text x="1045.0" y="189.525" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">EG800AK-JP 等＋IoT SIM＋アンテナ</text>
+<rect x="890" y="230" width="310" height="80" rx="8" fill="#fff1e0" stroke="#d9822b" stroke-width="1.5" fill-opacity="1"/>
+<text x="1045.0" y="257.3" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">XIAO ESP32S3 Sense</text>
+<text x="1045.0" y="276.54999999999995" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">制御・映像 MJPEG・音声</text>
+<text x="1045.0" y="292.49999999999994" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">300ms 途絶で停止・範囲外で停止</text>
+<line x1="1045" y1="210" x2="1045" y2="230" stroke="#1f2933" stroke-width="2" marker-end="url(#arr)" marker-start="url(#arr)"/>
+<text x="1058" y="224" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">UART</text>
+<rect x="890" y="330" width="150" height="56" rx="8" fill="#e6f6ea" stroke="#2f9e57" stroke-width="1.5" fill-opacity="1"/>
+<text x="965.0" y="353.275" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">GPS</text>
+<text x="965.0" y="372.5249999999999" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">MAX-M10S</text>
+<rect x="1050" y="330" width="150" height="56" rx="8" fill="#f1f3f5" stroke="#868e96" stroke-width="1.5" fill-opacity="1"/>
+<text x="1125.0" y="353.275" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">走行・ジャンプ</text>
+<text x="1125.0" y="372.5249999999999" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">W2 と同じ</text>
+<rect x="890" y="400" width="150" height="56" rx="8" fill="#f1f3f5" stroke="#868e96" stroke-width="1.5" fill-opacity="1"/>
+<text x="965.0" y="423.275" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">カメラ・マイク</text>
+<text x="965.0" y="442.5249999999999" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">XIAO に内蔵</text>
+<rect x="1050" y="400" width="150" height="56" rx="8" fill="#fff1e0" stroke="#d9822b" stroke-width="1.5" fill-opacity="1"/>
+<text x="1125.0" y="423.275" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">リポ電池</text>
+<text x="1125.0" y="442.5249999999999" font-size="11" text-anchor="middle" font-weight="normal" fill="#374151">600〜800mAh 高放電</text>
+<rect x="890" y="470" width="310" height="50" rx="8" fill="#ffffff" stroke="#868e96" stroke-width="1.5" stroke-dasharray="5 4" fill-opacity="1"/>
+<text x="1045.0" y="498.0" font-size="12" text-anchor="middle" font-weight="bold" fill="#1f2933">（後日追加）U137 LTE-M 予備回線</text>
+<line x1="965" y1="310" x2="965" y2="330" stroke="#1f2933" stroke-width="1.5" marker-end="url(#arr)" marker-start="url(#arr)"/>
+<line x1="1125" y1="310" x2="1125" y2="330" stroke="#1f2933" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="30" y="430" width="790" height="120.0" rx="6" fill="#fffbea" stroke="#e0b100" stroke-width="1.2" fill-opacity="1"/>
+<text x="42" y="450" font-size="13" text-anchor="start" font-weight="bold" fill="#1f2933">設計のポイント</text>
+<text x="42" y="470.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・機体は電源を入れると自分から VPS へ接続する。機体は外からの接続を受け付けない（NAT の内側でも動く）。</text>
+<text x="42" y="488.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・通信の仕組みは W1 と同じで、経路が「自宅Wi-Fi」から「LTE」に変わるだけ。経路を足せる作りは Phase 2 の中継で使う。</text>
+<text x="42" y="506.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・電波が弱いときは映像の画質を自動で下げ、音声を止めて、操作を最優先にする。</text>
+<text x="42" y="524.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・位置は GPS（屋外で 2〜5m）。屋内では GPS が効かないので、最後の位置と映像で判断する。</text>
+<text x="42" y="542.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・U137（LTE-M）は後日、屋内で操作が途絶える場合の予備回線として追加する（ピンは別途 I2C 拡張で確保）。</text>
+<rect x="796" y="600" width="430" height="66" rx="0" fill="#fff" stroke="#1f2933" stroke-width="1.2" fill-opacity="1"/>
+<line x1="906" y1="600" x2="906" y2="666" stroke="#1f2933" stroke-width="0.8"/>
+<line x1="796" y1="633" x2="906" y2="633" stroke="#1f2933" stroke-width="0.8"/>
+<line x1="906" y1="640" x2="1226" y2="640" stroke="#1f2933" stroke-width="0.8"/>
+<text x="804" y="614" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">図番</text>
+<text x="851" y="627" font-size="14" text-anchor="middle" font-weight="bold" fill="#1f2933">C1</text>
+<text x="804" y="647" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">単位</text>
+<text x="866" y="659" font-size="12" text-anchor="middle" font-weight="normal" fill="#1f2933">mm</text>
+<text x="914" y="614" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">遠隔操作チョロQ</text>
+<text x="914" y="633" font-size="15" text-anchor="start" font-weight="bold" fill="#1f2933">システム構成図（組み上げモデル）</text>
+<text x="914" y="657" font-size="11" text-anchor="start" font-weight="normal" fill="#6b7280">尺度 NTS（尺度なし）   作成 2026-10-25</text>
+</svg>

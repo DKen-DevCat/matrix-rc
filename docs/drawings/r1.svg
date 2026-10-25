@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="760" viewBox="0 0 1240 760" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN',sans-serif">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<defs>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2933"/></marker>
+<marker id="arrb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3b6fd8"/></marker>
+<marker id="arro" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d9822b"/></marker>
+<marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f9e57"/></marker>
+<marker id="arrr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d64545"/></marker>
+<marker id="dim" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" fill="#6b7280"/></marker>
+<pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#868e96" stroke-width="1"/></pattern>
+</defs>
+<text x="24" y="38" font-size="22" text-anchor="start" font-weight="bold" fill="#1f2933">R1  運用配置図 ― 中継ペアモデル（Phase 2）</text>
+<text x="24" y="62" font-size="13" text-anchor="start" font-weight="normal" fill="#6b7280">2台を同じハードで作り、片方（B）を電波の良い入口に停めて中継役にする。もう片方（A）が店の奥へ入る</text>
+<rect x="30" y="90" width="1180" height="160" rx="10" fill="#f4fbf6" stroke="#2f9e57" stroke-width="1" stroke-dasharray="6 4" fill-opacity="1"/>
+<text x="46" y="114" font-size="13" text-anchor="start" font-weight="bold" fill="#2f9e57">屋外（園内の通路）― LTE 良好</text>
+<polyline points="178,236 200,141 222,236" fill="none" stroke="#1f2933" stroke-width="2" stroke-linejoin="round"/>
+<line x1="186" y1="204" x2="214" y2="204" stroke="#1f2933" stroke-width="1.5"/>
+<line x1="192" y1="176" x2="208" y2="176" stroke="#1f2933" stroke-width="1.5"/>
+<path d="M209.8,131.2 A14,14 0 0 1 209.8,150.8" fill="none" stroke="#2f9e57" stroke-width="1.6"/>
+<path d="M218.2,122.8 A26,26 0 0 1 218.2,159.2" fill="none" stroke="#2f9e57" stroke-width="1.6"/>
+<path d="M226.6,114.4 A38,38 0 0 1 226.6,167.6" fill="none" stroke="#2f9e57" stroke-width="1.6"/>
+<text x="200" y="254" font-size="11" text-anchor="middle" font-weight="normal" fill="#1f2933">携帯基地局</text>
+<rect x="300" y="250" width="880" height="400" rx="0" fill="#fbfbfc" stroke="#1f2933" stroke-width="0" fill-opacity="1"/>
+<line x1="300" y1="250" x2="630" y2="250" stroke="#1f2933" stroke-width="6"/>
+<line x1="770" y1="250" x2="1180" y2="250" stroke="#1f2933" stroke-width="6"/>
+<line x1="300" y1="250" x2="300" y2="650" stroke="#1f2933" stroke-width="6"/>
+<line x1="1180" y1="250" x2="1180" y2="650" stroke="#1f2933" stroke-width="6"/>
+<line x1="300" y1="650" x2="1180" y2="650" stroke="#1f2933" stroke-width="6"/>
+<text x="700" y="240" font-size="13" text-anchor="middle" font-weight="bold" fill="#1f2933">入口</text>
+<text x="1160" y="632" font-size="13" text-anchor="end" font-weight="bold" fill="#6b7280">ショップの中（LTE 弱い・床すれすれ）</text>
+<rect x="420" y="400" width="150" height="26" rx="3" fill="#e9ecef" stroke="#868e96" stroke-width="1" fill-opacity="1"/>
+<rect x="650" y="400" width="150" height="26" rx="3" fill="#e9ecef" stroke="#868e96" stroke-width="1" fill-opacity="1"/>
+<rect x="880" y="400" width="150" height="26" rx="3" fill="#e9ecef" stroke="#868e96" stroke-width="1" fill-opacity="1"/>
+<text x="495" y="418" font-size="10" text-anchor="middle" font-weight="normal" fill="#6b7280">棚</text>
+<rect x="672" y="176" width="56" height="32" rx="6" fill="#fff1e0" stroke="#d9822b" stroke-width="2" fill-opacity="1"/>
+<text x="700" y="197" font-size="15" text-anchor="middle" font-weight="bold" fill="#d9822b">B</text>
+<text x="740" y="190" font-size="12" text-anchor="start" font-weight="bold" fill="#d9822b">機体B（中継役）</text>
+<text x="740" y="207" font-size="11" text-anchor="start" font-weight="normal" fill="#6b7280">入口の外側に停車・LTE 良好</text>
+<rect x="912" y="464" width="56" height="32" rx="6" fill="#e8f0fe" stroke="#3b6fd8" stroke-width="2" fill-opacity="1"/>
+<text x="940" y="485" font-size="15" text-anchor="middle" font-weight="bold" fill="#3b6fd8">A</text>
+<text x="900" y="522" font-size="12" text-anchor="end" font-weight="bold" fill="#3b6fd8">機体A（探索役）</text>
+<text x="900" y="539" font-size="11" text-anchor="end" font-weight="normal" fill="#6b7280">店の奥へ入る</text>
+<path d="M310,250 A390,390 0 0 0 1090,250" fill="none" stroke="#7c4dd6" stroke-width="1.4" stroke-dasharray="8 5"/>
+<text x="1080" y="370" font-size="11" text-anchor="end" font-weight="normal" fill="#7c4dd6">ESP-NOW の届く範囲（目安 10〜30m）</text>
+<line x1="710" y1="210" x2="926" y2="462" stroke="#7c4dd6" stroke-width="2.4"/>
+<rect x="795.6" y="324.0" width="108.8" height="16.799999999999997" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="850.0" y="336.0" font-size="12" text-anchor="middle" font-weight="bold" fill="#7c4dd6">ESP-NOW（数ms）</text>
+<line x1="230" y1="141" x2="670" y2="182" stroke="#2f9e57" stroke-width="2.6" marker-end="url(#arrg)"/>
+<rect x="419.6" y="142.5" width="60.8" height="16.799999999999997" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="450.0" y="154.5" font-size="12" text-anchor="middle" font-weight="bold" fill="#2f9e57">LTE 強い</text>
+<line x1="230" y1="156" x2="910" y2="480" stroke="#d64545" stroke-width="1.6" stroke-dasharray="6 5" marker-end="url(#arrr)"/>
+<rect x="445.6" y="346.0" width="168.8" height="16.799999999999997" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="530.0" y="358.0" font-size="12" text-anchor="middle" font-weight="normal" fill="#d64545">LTE 弱い（壁・床すれすれ）</text>
+<rect x="30" y="668" width="640" height="66.0" rx="6" fill="#fffbea" stroke="#e0b100" stroke-width="1.2" fill-opacity="1"/>
+<text x="42" y="688" font-size="13" text-anchor="start" font-weight="bold" fill="#1f2933">運用</text>
+<text x="42" y="708.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・B が近いほど A の操作が軽くなる。B が離れても A 自身の LTE で動き続ける（切り替えの瞬間はない）。</text>
+<text x="42" y="726.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・2台はまったく同じハード。役割（中継役／探索役）は操作画面から切り替える。</text>
+<rect x="796" y="680" width="430" height="66" rx="0" fill="#fff" stroke="#1f2933" stroke-width="1.2" fill-opacity="1"/>
+<line x1="906" y1="680" x2="906" y2="746" stroke="#1f2933" stroke-width="0.8"/>
+<line x1="796" y1="713" x2="906" y2="713" stroke="#1f2933" stroke-width="0.8"/>
+<line x1="906" y1="720" x2="1226" y2="720" stroke="#1f2933" stroke-width="0.8"/>
+<text x="804" y="694" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">図番</text>
+<text x="851" y="707" font-size="14" text-anchor="middle" font-weight="bold" fill="#1f2933">R1</text>
+<text x="804" y="727" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">単位</text>
+<text x="866" y="739" font-size="12" text-anchor="middle" font-weight="normal" fill="#1f2933">mm</text>
+<text x="914" y="694" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">遠隔操作チョロQ</text>
+<text x="914" y="713" font-size="15" text-anchor="start" font-weight="bold" fill="#1f2933">運用配置図（中継ペア）</text>
+<text x="914" y="737" font-size="11" text-anchor="start" font-weight="normal" fill="#6b7280">尺度 NTS（尺度なし）   作成 2026-10-25</text>
+</svg>

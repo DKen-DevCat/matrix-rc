@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="900" viewBox="0 0 1300 900" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN',sans-serif">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<defs>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2933"/></marker>
+<marker id="arrb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3b6fd8"/></marker>
+<marker id="arro" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d9822b"/></marker>
+<marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2f9e57"/></marker>
+<marker id="arrr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d64545"/></marker>
+<marker id="dim" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" fill="#6b7280"/></marker>
+<pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#868e96" stroke-width="1"/></pattern>
+</defs>
+<text x="24" y="38" font-size="22" text-anchor="start" font-weight="bold" fill="#1f2933">C4  ジャンプ機構図 ― 渦巻きカム式</text>
+<text x="24" y="62" font-size="13" text-anchor="start" font-weight="normal" fill="#6b7280">高減速モーターでカムをゆっくり回してばねを縮め、カムの段差で一気に放す。サーボより力が出せ、1方向に回すだけで済む</text>
+<rect x="40" y="100" width="390" height="470" rx="10" fill="#ffffff" stroke="#868e96" stroke-width="1.2" fill-opacity="1"/>
+<text x="56" y="128" font-size="15" text-anchor="start" font-weight="bold" fill="#1f2933">① 待機（伸びた状態）</text>
+<line x1="60" y1="520" x2="410" y2="520" stroke="#1f2933" stroke-width="1.2"/>
+<rect x="60" y="520" width="350" height="8" fill="url(#hatch)"/>
+<circle cx="120" cy="486" r="34" fill="#4b5563" stroke="#1f2933" stroke-width="1.4"/>
+<circle cx="120" cy="486" r="18.700000000000003" fill="#d1d5db" stroke="#1f2933" stroke-width="1"/>
+<circle cx="120" cy="486" r="2.2" fill="#1f2933" stroke="#1f2933" stroke-width="1"/>
+<circle cx="350" cy="486" r="34" fill="#4b5563" stroke="#1f2933" stroke-width="1.4"/>
+<circle cx="350" cy="486" r="18.700000000000003" fill="#d1d5db" stroke="#1f2933" stroke-width="1"/>
+<circle cx="350" cy="486" r="2.2" fill="#1f2933" stroke="#1f2933" stroke-width="1"/>
+<rect x="80" y="440" width="310" height="40" rx="4" fill="#e5e7eb" stroke="#1f2933" stroke-width="1.5" fill-opacity="1"/>
+<text x="235" y="466" font-size="12" text-anchor="middle" font-weight="bold" fill="#1f2933">下段</text>
+<rect x="70" y="310.0" width="330" height="70" rx="6" fill="#e8f0fe" stroke="#3b6fd8" stroke-width="1.8" fill-opacity="1"/>
+<text x="235" y="340.0" font-size="12" text-anchor="middle" font-weight="bold" fill="#1f2933">上段（電子部品・電池）</text>
+<polyline points="130,380.0 130,385.0 139,390.0 121,395.0 139,400.0 121,405.0 139,410.0 121,415.0 139,420.0 121,425.0 139,430.0 121,435.0 130,435.0 130,440" fill="none" stroke="#7c4dd6" stroke-width="1.8" stroke-linejoin="round"/>
+<polyline points="340,380.0 340,385.0 349,390.0 331,395.0 349,400.0 331,405.0 349,410.0 331,415.0 349,420.0 331,425.0 349,430.0 331,435.0 340,435.0 340,440" fill="none" stroke="#7c4dd6" stroke-width="1.8" stroke-linejoin="round"/>
+<line x1="100" y1="370.0" x2="100" y2="470" stroke="#868e96" stroke-width="2"/>
+<line x1="92" y1="470" x2="108" y2="470" stroke="#868e96" stroke-width="3"/>
+<g transform="rotate(0 235 460)"><path d="M235,452 A8,8 0 0 1 243,460 A12,12 0 0 1 235,472 A15,15 0 0 1 220,460 A18,18 0 0 1 235,442 Z" fill="#fde2e2" stroke="#d64545" stroke-width="1.8"/></g>
+<circle cx="235" cy="460" r="3" fill="#d64545" stroke="#d64545" stroke-width="1.4"/>
+<polyline points="265,380.0 265,474 237,474" fill="none" stroke="#d9822b" stroke-width="2.4" stroke-linejoin="round"/>
+<circle cx="237" cy="469" r="5" fill="#fff" stroke="#d9822b" stroke-width="1.8"/>
+<text x="235" y="555" font-size="11" text-anchor="middle" font-weight="normal" fill="#6b7280">フォロワーはカムの細い側。スイッチでカム位置を検知</text>
+<rect x="450" y="100" width="390" height="470" rx="10" fill="#ffffff" stroke="#868e96" stroke-width="1.2" fill-opacity="1"/>
+<text x="466" y="128" font-size="15" text-anchor="start" font-weight="bold" fill="#1f2933">② チャージ（縮める）</text>
+<line x1="470" y1="520" x2="820" y2="520" stroke="#1f2933" stroke-width="1.2"/>
+<rect x="470" y="520" width="350" height="8" fill="url(#hatch)"/>
+<circle cx="530" cy="486" r="34" fill="#4b5563" stroke="#1f2933" stroke-width="1.4"/>
+<circle cx="530" cy="486" r="18.700000000000003" fill="#d1d5db" stroke="#1f2933" stroke-width="1"/>
+<circle cx="530" cy="486" r="2.2" fill="#1f2933" stroke="#1f2933" stroke-width="1"/>
+<circle cx="760" cy="486" r="34" fill="#4b5563" stroke="#1f2933" stroke-width="1.4"/>
+<circle cx="760" cy="486" r="18.700000000000003" fill="#d1d5db" stroke="#1f2933" stroke-width="1"/>
+<circle cx="760" cy="486" r="2.2" fill="#1f2933" stroke="#1f2933" stroke-width="1"/>
+<rect x="490" y="440" width="310" height="40" rx="4" fill="#e5e7eb" stroke="#1f2933" stroke-width="1.5" fill-opacity="1"/>
+<text x="645" y="466" font-size="12" text-anchor="middle" font-weight="bold" fill="#1f2933">下段</text>
+<rect x="480" y="360.0" width="330" height="70" rx="6" fill="#e8f0fe" stroke="#3b6fd8" stroke-width="1.8" fill-opacity="1"/>
+<text x="645" y="390.0" font-size="12" text-anchor="middle" font-weight="bold" fill="#1f2933">上段（電子部品・電池）</text>
+<polyline points="540,430.0 540,430.8333333333333 549,431.66666666666663 531,432.49999999999994 549,433.33333333333326 531,434.1666666666666 549,434.9999999999999 531,435.8333333333332 549,436.6666666666665 531,437.49999999999983 549,438.33333333333314 531,439.16666666666646 540,439.1666666666667 540,440" fill="none" stroke="#7c4dd6" stroke-width="1.8" stroke-linejoin="round"/>
+<polyline points="750,430.0 750,430.8333333333333 759,431.66666666666663 741,432.49999999999994 759,433.33333333333326 741,434.1666666666666 759,434.9999999999999 741,435.8333333333332 759,436.6666666666665 741,437.49999999999983 759,438.33333333333314 741,439.16666666666646 750,439.1666666666667 750,440" fill="none" stroke="#7c4dd6" stroke-width="1.8" stroke-linejoin="round"/>
+<line x1="510" y1="420.0" x2="510" y2="470" stroke="#868e96" stroke-width="2"/>
+<line x1="502" y1="470" x2="518" y2="470" stroke="#868e96" stroke-width="3"/>
+<g transform="rotate(300 645 460)"><path d="M645,452 A8,8 0 0 1 653,460 A12,12 0 0 1 645,472 A15,15 0 0 1 630,460 A18,18 0 0 1 645,442 Z" fill="#fde2e2" stroke="#d64545" stroke-width="1.8"/></g>
+<circle cx="645" cy="460" r="3" fill="#d64545" stroke="#d64545" stroke-width="1.4"/>
+<polyline points="675,430.0 675,484 647,484" fill="none" stroke="#d9822b" stroke-width="2.4" stroke-linejoin="round"/>
+<circle cx="647" cy="479" r="5" fill="#fff" stroke="#d9822b" stroke-width="1.8"/>
+<line x1="790" y1="320.0" x2="790" y2="354.0" stroke="#d64545" stroke-width="2.5" marker-end="url(#arrr)"/>
+<rect x="718.5" y="303.0" width="63" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="750" y="314.0" font-size="11" text-anchor="middle" font-weight="normal" fill="#d64545">引き下げる</text>
+<text x="645" y="555" font-size="11" text-anchor="middle" font-weight="normal" fill="#6b7280">カムが太る側でフォロワーを押し下げ、ばねを縮める</text>
+<rect x="860" y="100" width="390" height="470" rx="10" fill="#ffffff" stroke="#868e96" stroke-width="1.2" fill-opacity="1"/>
+<text x="876" y="128" font-size="15" text-anchor="start" font-weight="bold" fill="#1f2933">③ 解放 → 跳躍</text>
+<line x1="880" y1="520" x2="1230" y2="520" stroke="#1f2933" stroke-width="1.2"/>
+<rect x="880" y="520" width="350" height="8" fill="url(#hatch)"/>
+<circle cx="940" cy="426" r="34" fill="#4b5563" stroke="#1f2933" stroke-width="1.4"/>
+<circle cx="940" cy="426" r="18.700000000000003" fill="#d1d5db" stroke="#1f2933" stroke-width="1"/>
+<circle cx="940" cy="426" r="2.2" fill="#1f2933" stroke="#1f2933" stroke-width="1"/>
+<circle cx="1170" cy="426" r="34" fill="#4b5563" stroke="#1f2933" stroke-width="1.4"/>
+<circle cx="1170" cy="426" r="18.700000000000003" fill="#d1d5db" stroke="#1f2933" stroke-width="1"/>
+<circle cx="1170" cy="426" r="2.2" fill="#1f2933" stroke="#1f2933" stroke-width="1"/>
+<rect x="900" y="380" width="310" height="40" rx="4" fill="#e5e7eb" stroke="#1f2933" stroke-width="1.5" fill-opacity="1"/>
+<text x="1055" y="406" font-size="12" text-anchor="middle" font-weight="bold" fill="#1f2933">下段</text>
+<rect x="890" y="250" width="330" height="70" rx="6" fill="#e8f0fe" stroke="#3b6fd8" stroke-width="1.8" fill-opacity="1"/>
+<text x="1055" y="280" font-size="12" text-anchor="middle" font-weight="bold" fill="#1f2933">上段（電子部品・電池）</text>
+<polyline points="950,320 950,325.0 959,330.0 941,335.0 959,340.0 941,345.0 959,350.0 941,355.0 959,360.0 941,365.0 959,370.0 941,375.0 950,375.0 950,380" fill="none" stroke="#7c4dd6" stroke-width="1.8" stroke-linejoin="round"/>
+<polyline points="1160,320 1160,325.0 1169,330.0 1151,335.0 1169,340.0 1151,345.0 1169,350.0 1151,355.0 1169,360.0 1151,365.0 1169,370.0 1151,375.0 1160,375.0 1160,380" fill="none" stroke="#7c4dd6" stroke-width="1.8" stroke-linejoin="round"/>
+<line x1="920" y1="310" x2="920" y2="410" stroke="#868e96" stroke-width="2"/>
+<line x1="912" y1="410" x2="928" y2="410" stroke="#868e96" stroke-width="3"/>
+<g transform="rotate(359 1055 400)"><path d="M1055,392 A8,8 0 0 1 1063,400 A12,12 0 0 1 1055,412 A15,15 0 0 1 1040,400 A18,18 0 0 1 1055,382 Z" fill="#fde2e2" stroke="#d64545" stroke-width="1.8"/></g>
+<circle cx="1055" cy="400" r="3" fill="#d64545" stroke="#d64545" stroke-width="1.4"/>
+<polyline points="1085,320 1085,414 1057,414" fill="none" stroke="#d9822b" stroke-width="2.4" stroke-linejoin="round"/>
+<circle cx="1057" cy="409" r="5" fill="#fff" stroke="#d9822b" stroke-width="1.8"/>
+<line x1="1055" y1="240" x2="1055" y2="190" stroke="#2f9e57" stroke-width="2.5" marker-end="url(#arrg)"/>
+<rect x="1072.0" y="197" width="96" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="1120" y="208" font-size="11" text-anchor="middle" font-weight="normal" fill="#2f9e57">上段が跳ね上がり</text>
+<rect x="1061.0" y="215" width="118" height="15.399999999999999" rx="3" fill="#ffffff" fill-opacity="0.95"/>
+<text x="1120" y="226" font-size="11" text-anchor="middle" font-weight="normal" fill="#2f9e57">下段を引っ張り上げる</text>
+<text x="1055" y="555" font-size="11" text-anchor="middle" font-weight="normal" fill="#6b7280">段差を越えるとフォロワーが外れ、ばねが一気に伸びる</text>
+<rect x="40" y="600" width="820" height="156.0" rx="6" fill="#fffbea" stroke="#e0b100" stroke-width="1.2" fill-opacity="1"/>
+<text x="52" y="620" font-size="13" text-anchor="start" font-weight="bold" fill="#1f2933">設計計算</text>
+<text x="52" y="640.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">目標：3cm の段差を越える → 跳躍高さ 4cm 以上（余裕込み）。機体の重さ m＝約100g（上段 約60g・下段 約40g）。</text>
+<text x="52" y="658.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">必要なエネルギー：m·g·h ＝ 0.1 × 9.8 × 0.04 ≒ 0.04J。上段が下段を引っ張る時の損失（約4割）と余裕を見て、ばねに 約0.1J を蓄える。</text>
+<text x="52" y="676.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">ばね：4本 × ばね定数 約0.5N/mm × 縮め量 10mm → 蓄えるエネルギー ＝ 4 × ½ × 500 × 0.01² ＝ 0.1J。縮めきった時の力は合計 約20N。</text>
+<text x="52" y="694.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">カムを回す力：トルク ≒ 力 × 半径の増え方（10mm ÷ 約5.2rad）＝ 20N × 1.9mm ≒ 0.04N·m。摩擦込みで 約0.08N·m。</text>
+<text x="52" y="712.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">　→ N20 の高減速モーター（1000:1 前後）で回せる見込み。1回転 約3〜4秒 ＝ ジャンプの「チャージ時間」になる。</text>
+<text x="52" y="730.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">跳躍の見積もり：上段の速さ √(2×0.1÷0.06) ≒ 1.8m/s → 下段を引っ張った後 約1.1m/s → 高さ 約6cm（損失を引くと 4〜5cm）。</text>
+<text x="52" y="748.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">※ 数値は計算上の目安。段階③の単体試作で、ばねの強さと縮め量を実測して決める。</text>
+<rect x="880" y="600" width="400" height="138.0" rx="6" fill="#fffbea" stroke="#e0b100" stroke-width="1.2" fill-opacity="1"/>
+<text x="892" y="620" font-size="13" text-anchor="start" font-weight="bold" fill="#1f2933">なぜこの方式か</text>
+<text x="892" y="640.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・SG90 サーボは力が足りないので使わない</text>
+<text x="892" y="658.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">  （20N を直接引くには 2kgf 以上が必要）。</text>
+<text x="892" y="676.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・カムは1方向に回すだけ。MOSFET 1個で済む。</text>
+<text x="892" y="694.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・カム位置スイッチで「チャージ完了」を知る。</text>
+<text x="892" y="712.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・着地の衝撃対策に、XIAO と LTE ボードは</text>
+<text x="892" y="730.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">  スポンジ両面テープで上段に固定する。</text>
+<rect x="856" y="820" width="430" height="66" rx="0" fill="#fff" stroke="#1f2933" stroke-width="1.2" fill-opacity="1"/>
+<line x1="966" y1="820" x2="966" y2="886" stroke="#1f2933" stroke-width="0.8"/>
+<line x1="856" y1="853" x2="966" y2="853" stroke="#1f2933" stroke-width="0.8"/>
+<line x1="966" y1="860" x2="1286" y2="860" stroke="#1f2933" stroke-width="0.8"/>
+<text x="864" y="834" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">図番</text>
+<text x="911" y="847" font-size="14" text-anchor="middle" font-weight="bold" fill="#1f2933">C4</text>
+<text x="864" y="867" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">単位</text>
+<text x="926" y="879" font-size="12" text-anchor="middle" font-weight="normal" fill="#1f2933">mm</text>
+<text x="974" y="834" font-size="10" text-anchor="start" font-weight="normal" fill="#6b7280">遠隔操作チョロQ</text>
+<text x="974" y="853" font-size="15" text-anchor="start" font-weight="bold" fill="#1f2933">ジャンプ機構図（渦巻きカム式）</text>
+<text x="974" y="877" font-size="11" text-anchor="start" font-weight="normal" fill="#6b7280">尺度 NTS（尺度なし）   作成 2026-10-25</text>
+</svg>
