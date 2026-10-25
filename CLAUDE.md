@@ -1,4 +1,4 @@
-# choroq-rc
+# matrix-rc
 
 開発運用ルールはグローバル `~/.claude/CLAUDE.md` を正本とする。ここにはこのプロジェクト固有の事項だけを置く。
 
