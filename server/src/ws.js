@@ -22,7 +22,7 @@ function frame(opcode, payload) {
 }
 
 class Connection {
-  constructor(socket) {
+  constructor(socket, head) {
     this.socket = socket;
     this.buf = Buffer.alloc(0);
     this.parts = [];
@@ -34,6 +34,8 @@ class Connection {
     socket.on('data', (d) => this.#onData(d));
     socket.on('close', () => this.#finish());
     socket.on('error', () => this.#finish());
+    // ハンドシェイクと同じ TCP セグメントに最初のフレームが入っていることがある（head）。捨てずに処理する
+    if (head?.length) queueMicrotask(() => this.#onData(head));
   }
 
   send(data) {
@@ -102,18 +104,38 @@ class Connection {
     if (!fin) return;
     const msg = Buffer.concat(this.parts);
     this.parts = [];
-    if (this.partsOp === OP.TEXT) this.onText(msg.toString('utf8'));
-    else this.onBinary(new Uint8Array(msg.buffer, msg.byteOffset, msg.byteLength));
+    // 受け手の例外で中継サーバ全体が落ちないよう、その接続だけを閉じる
+    try {
+      if (this.partsOp === OP.TEXT) this.onText(msg.toString('utf8'));
+      else this.onBinary(new Uint8Array(msg.buffer, msg.byteOffset, msg.byteLength));
+    } catch (e) {
+      console.error('WebSocket メッセージの処理に失敗', e);
+      this.close(1011);
+    }
   }
+}
+
+// Origin が付いていれば、操作画面を配った同じホストからの接続だけを受ける
+// （別のサイトを開いたブラウザから、このサーバの WebSocket を勝手に使われないように）。
+// Origin を付けない接続（ブラウザ以外）はトークンの照合だけに任せる。
+function originAllowed(req) {
+  const origin = req.headers.origin;
+  if (!origin) return true;
+  try { return new URL(origin).host === req.headers.host; } catch { return false; }
 }
 
 // http サーバの path に WebSocket を受け付ける。接続ごとに onConnection(conn, req) を呼ぶ。
 export function attachWebSocket(server, path, onConnection) {
-  server.on('upgrade', (req, socket) => {
+  server.on('upgrade', (req, socket, head) => {
     const url = new URL(req.url, 'http://x');
     const key = req.headers['sec-websocket-key'];
-    if (url.pathname !== path || req.headers.upgrade?.toLowerCase() !== 'websocket' || !key) {
+    if (url.pathname !== path || req.headers.upgrade?.toLowerCase() !== 'websocket' || !key
+        || req.headers['sec-websocket-version'] !== '13') {
       socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+      return;
+    }
+    if (!originAllowed(req)) {
+      socket.end('HTTP/1.1 403 Forbidden\r\n\r\n');
       return;
     }
     const accept = createHash('sha1').update(key + GUID).digest('base64');
@@ -122,6 +144,6 @@ export function attachWebSocket(server, path, onConnection) {
       + `Sec-WebSocket-Accept: ${accept}\r\n\r\n`,
     );
     socket.setNoDelay(true);
-    onConnection(new Connection(socket), req);
+    onConnection(new Connection(socket, head), req);
   });
 }

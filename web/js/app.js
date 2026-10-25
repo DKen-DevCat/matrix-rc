@@ -20,12 +20,16 @@ let sendTimer = null;
 // ---- 接続 ----
 
 $('token').value = storage.get('mrc.token') ?? '';
+// ボタンやフォームにフォーカスが残ると、W や Space がボタンの操作に取られる。操作キーは画面全体で受けたいので外す
+const unfocus = () => document.activeElement?.blur?.();
+
 $('login').addEventListener('submit', (e) => {
   e.preventDefault();
   storage.set('mrc.token', $('token').value);
   connect($('token').value, Number($('device').value));
+  unfocus();
 });
-$('claim').addEventListener('click', () => ws?.send(JSON.stringify({ type: 'claim' })));
+$('claim').addEventListener('click', () => { ws?.send(JSON.stringify({ type: 'claim' })); unfocus(); });
 
 function setStatus(text, cls) {
   $('status').textContent = text;
@@ -33,19 +37,31 @@ function setStatus(text, cls) {
 }
 
 function connect(token, deviceId) {
-  ws?.close();
-  ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws`);
-  ws.binaryType = 'arraybuffer';
+  if (ws) {
+    // 前の接続の close イベントは遅れて届く。新しい接続の送信を止めないよう、先にハンドラを外す
+    ws.onclose = null;
+    ws.onmessage = null;
+    ws.close();
+  }
+  stopSending();
+  const sock = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws`);
+  ws = sock;
+  sock.binaryType = 'arraybuffer';
   // 接続ごとに新しいセッションID（機体は停止中にだけ新しいセッションを受け入れる）
   sender = new ControlSender({ deviceId });
   setStatus('接続中…');
-  ws.onopen = () => ws.send(JSON.stringify({ type: 'auth', token, deviceId }));
-  ws.onclose = () => {
+  sock.onopen = () => sock.send(JSON.stringify({ type: 'auth', token, deviceId }));
+  sock.onclose = () => {
+    if (sock !== ws) return;
     stopSending();
     setStatus('切断', 'bad');
     $('claim').hidden = true;
   };
-  ws.onmessage = (e) => (typeof e.data === 'string' ? onStatus(JSON.parse(e.data)) : onBinary(new Uint8Array(e.data)));
+  sock.onmessage = (e) => {
+    if (sock !== ws) return;
+    if (typeof e.data === 'string') onStatus(JSON.parse(e.data));
+    else onBinary(new Uint8Array(e.data));
+  };
 }
 
 function onStatus(msg) {
@@ -77,18 +93,24 @@ function showKey(code, on) {
   document.querySelector(`kbd[data-k="${code}"]`)?.classList.toggle('on', on);
 }
 
+const typing = (e) => e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement
+  || e.target instanceof HTMLTextAreaElement;
+
 addEventListener('keydown', (e) => {
-  if (e.target instanceof HTMLInputElement || !sender) return;
+  if (typing(e) || !sender) return;
   if (sender.keyDown(e.code)) { e.preventDefault(); showKey(e.code, true); }
 });
 addEventListener('keyup', (e) => {
   if (!sender) return;
   if (sender.keyUp(e.code)) { e.preventDefault(); showKey(e.code, false); }
 });
-addEventListener('blur', () => {
+// ウィンドウから外れたり、タブが隠れたりしたら全キーを離したことにする（押しっぱなしで走り続けない）
+function releaseAllKeys() {
   sender?.releaseAll();
   document.querySelectorAll('kbd.on').forEach((k) => k.classList.remove('on'));
-});
+}
+addEventListener('blur', releaseAllKeys);
+document.addEventListener('visibilitychange', () => { if (document.hidden) releaseAllKeys(); });
 
 // ---- 受信 ----
 
@@ -126,7 +148,10 @@ function onVideo(chunk) {
 
 function onTelemetry(t) {
   if (!t) return;
-  if (sender && t.sessionId === sender.sessionId) rtts.push(rttMs(performance.now(), t.sentAt, t.holdMs));
+  // 機体側の待ち時間が 255ms で頭打ちになっているときは、最後の操作が古すぎて往復遅延にならないので数えない
+  if (sender && t.sessionId === sender.sessionId && t.holdMs < 255) {
+    rtts.push(rttMs(performance.now(), t.sentAt, t.holdMs));
+  }
   const v = t.vbatMv / 1000;
   $('vbat').textContent = `${v.toFixed(2)} V`;
   $('vbat').className = t.flags & FLAG.LOW_BATT_CUTOFF ? 'bad' : t.flags & FLAG.LOW_BATT_WARN ? 'warn' : '';
@@ -187,6 +212,7 @@ const audio = {
 };
 $('audio').disabled = false;
 $('audio').addEventListener('click', () => {
+  unfocus();
   if (audio.ctx) return;
   audio.start();
   $('audio').textContent = '音声 再生中';

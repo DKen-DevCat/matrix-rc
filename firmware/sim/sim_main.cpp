@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
   if (!jpegPath.empty()) {
     std::ifstream f(jpegPath, std::ios::binary);
     jpeg.assign(std::istreambuf_iterator<char>(f), {});
-    if (jpeg.empty() || chunkCount(jpeg.size()) > 255) { std::fprintf(stderr, "JPEG を読めないか大きすぎます\n"); return 1; }
+    if (jpeg.empty() || jpeg.size() > 255 * CHUNK_MAX) { std::fprintf(stderr, "JPEG を読めないか大きすぎます\n"); return 1; }
   }
 
   auto colon = server.rfind(':');

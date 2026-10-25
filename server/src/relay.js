@@ -83,6 +83,7 @@ export class Relay {
   #onClientText(c, text) {
     let msg;
     try { msg = JSON.parse(text); } catch { return; }
+    if (!msg || typeof msg !== 'object') return;  // `null` や数値も JSON としては正しいので弾く
     if (msg.type === 'auth' && !c.authed) {
       if (typeof msg.token !== 'string' || !sameToken(msg.token, this.token)) {
         this.log({ event: 'client_rejected' });
@@ -91,7 +92,8 @@ export class Relay {
         return;
       }
       c.authed = true;
-      c.deviceId = Number.isInteger(msg.deviceId) ? msg.deviceId : 1;
+      const id = msg.deviceId;
+      c.deviceId = Number.isInteger(id) && id >= 1 && id <= 254 ? id : 1;
       this.#claim(c);
       this.#sendStatus(c);
     } else if (msg.type === 'claim' && c.authed) {

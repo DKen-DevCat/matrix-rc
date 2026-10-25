@@ -175,3 +175,21 @@ test('認証しないまま 2 秒たったブラウザは切断する', () => {
   tick(2100);
   assert.equal(c.closed, true);
 });
+
+test('JSON としては正しいが物でないテキスト（null など）が来てもサーバは落ちない', () => {
+  const { relay } = setup();
+  const c = client();
+  const h = relay.addClient(c);
+  for (const text of ['null', '123', '"auth"', 'true', '{broken']) h.onText(text);
+  h.onText(JSON.stringify({ type: 'auth', token: TOKEN, deviceId: 1 }));
+  assert.equal(c.json().at(-1).role, 'operator');
+});
+
+test('機体IDが 1〜254 の整数でなければ 1 として扱う', () => {
+  const { relay } = setup();
+  for (const deviceId of [0, 255, -1, 1.5, 'x', undefined]) {
+    const c = client();
+    relay.addClient(c).onText(JSON.stringify({ type: 'auth', token: TOKEN, deviceId }));
+    assert.equal(c.json().at(-1).deviceId, 1, `deviceId=${deviceId}`);
+  }
+});
