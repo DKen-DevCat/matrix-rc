@@ -10,7 +10,7 @@
 <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#868e96" stroke-width="1"/></pattern>
 </defs>
 <text x="24" y="38" font-size="22" text-anchor="start" font-weight="bold" fill="#1f2933">C3  外形図（三面図）― 組み上げモデル</text>
-<text x="24" y="62" font-size="13" text-anchor="start" font-weight="normal" fill="#6b7280">上段＝電子部品と電池（重い）、下段＝足回り。上下の間のばねでジャンプする。寸法は目安で、段階③の試作後に確定する</text>
+<text x="24" y="62" font-size="13" text-anchor="start" font-weight="normal" fill="#6b7280">上段＝電子部品と電池（重い）、下段＝足回り。上下の間のばねでジャンプする。寸法は目安で、Phase 1-b2 の試作後に確定する</text>
 <text x="120" y="132" font-size="14" text-anchor="start" font-weight="bold" fill="#1f2933">上面図（上段を外して足回りを破線で表示）</text>
 <rect x="120" y="150" width="364.0" height="220.0" rx="6" fill="#fbfcfe" stroke="#1f2933" stroke-width="2" fill-opacity="1"/>
 <rect x="128.0" y="150" width="104.0" height="24.0" rx="3" fill="#4b5563" stroke="#1f2933" stroke-width="1.2" fill-opacity="1"/>
@@ -126,13 +126,15 @@
 <line x1="760" y1="864" x2="980.0" y2="864" stroke="#6b7280" stroke-width="0.9" marker-end="url(#dim)" marker-start="url(#dim)"/>
 <rect x="858.8" y="848" width="22.4" height="16.799999999999997" rx="3" fill="#ffffff" fill-opacity="0.95"/>
 <text x="870.0" y="860" font-size="12" text-anchor="middle" font-weight="normal" fill="#6b7280">55</text>
-<rect x="640" y="418" width="640" height="120.0" rx="6" fill="#fffbea" stroke="#e0b100" stroke-width="1.2" fill-opacity="1"/>
+<rect x="640" y="418" width="640" height="156.0" rx="6" fill="#fffbea" stroke="#e0b100" stroke-width="1.2" fill-opacity="1"/>
 <text x="652" y="438" font-size="13" text-anchor="start" font-weight="bold" fill="#1f2933">設計メモ</text>
 <text x="652" y="458.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・左右の走行モーターは前後にずらして置く（2個を一直線に並べると幅が足りない）。</text>
 <text x="652" y="476.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・重い部品（電池・LTE）は上段に載せる。上段が重いほど高く跳べる。</text>
 <text x="652" y="494.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・前輪は自由回転。左右の回転差で向きを変える（スキッドステア）。</text>
 <text x="652" y="512.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・上段と下段はガイドピン（M2 ねじ）で上下だけ動く。ねじの頭が伸びきりのストッパー。</text>
 <text x="652" y="530.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・目標の重さは約 100g（内訳は設計書②の重量表）。</text>
+<text x="652" y="548.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">・上下のすき間 12mm は縮めると 2mm になる。10mm リフトのカム（直径 30mm 級）の収まり場所は</text>
+<text x="652" y="566.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">  未確定。Phase 1-b2 で「縮めた状態」の側面図も描いて確定する（てこで増幅する案も含む）。</text>
 <rect x="856" y="920" width="430" height="66" rx="0" fill="#fff" stroke="#1f2933" stroke-width="1.2" fill-opacity="1"/>
 <line x1="966" y1="920" x2="966" y2="986" stroke="#1f2933" stroke-width="0.8"/>
 <line x1="856" y1="953" x2="966" y2="953" stroke="#1f2933" stroke-width="0.8"/>

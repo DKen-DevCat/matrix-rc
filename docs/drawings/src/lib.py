@@ -91,7 +91,6 @@ class Svg:
         self.add(f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}"{d}/>')
 
     def label_bg(self, x, y, s, size=12, fill=INK, bg="#ffffff", anchor="middle", weight="normal"):
-        w = len(s) * size * 0.95 if any(ord(c) > 255 for c in s) else len(s) * size * 0.6
         w = sum(size if ord(c) > 255 else size * 0.6 for c in s) + 8
         x0 = x - w / 2 if anchor == "middle" else (x if anchor == "start" else x - w)
         self.add(f'<rect x="{x0}" y="{y - size}" width="{w}" height="{size * 1.4}" rx="3" fill="{bg}" fill-opacity="0.95"/>')

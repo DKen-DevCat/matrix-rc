@@ -223,7 +223,7 @@ def w2(lte=False):
     BX, BY = X + 40, by + 140
     s.rect(BX, BY, 150, 56, "#fff4e6", ORANGE_S, 1.6, 6)
     s.text(BX + 75, BY + 24, "リポ電池 1S", 12, "middle", "bold")
-    s.text(BX + 75, BY + 42, "1000mAh・保護回路付き", 10, "middle")
+    s.text(BX + 75, BY + 42, "600〜800mAh・高放電・保護回路付き" if lte else "1000mAh・保護回路付き", 10, "middle")
     s.text(BX + 30, BY - 6, "+", 13, weight="bold")
     s.line(X + 150, by + 120, X + 150, BY)
     s.text(X + 158, BY - 6, "−", 13, weight="bold")
@@ -344,9 +344,6 @@ def w3():
     s.rect(ax - 6 * k, y0 + 2 * k, 12 * k, 26 * k, "none", GRAY_S, 1.3, 2, "5 3")
     s.rect(ax - 6 * k, y0 + 32 * k, 12 * k, 26 * k, "none", GRAY_S, 1.3, 2, "5 3")
     s.text(ax + 17 * k + 10, y0 - 9 * k + 15, "← 走行モーター（プレートの下・破線）", 11, fill=GRAY_S)
-    # caster hidden
-    s.circle(x0 + 108 * k, y0 + 30 * k, 9 * k, "none", GRAY_S, 1.3, "5 3")
-    s.text(x0 + L * k + 14, y0 + 42 * k, "ボールキャスター（下・破線）", 11, fill=GRAY_S)
     # battery on top
     s.rect(x0 + 8 * k, y0 + 13 * k, 50 * k, 34 * k, "#fff1e0", ORANGE_S, 1.5, 4)
     s.text(x0 + 33 * k, y0 + 29 * k, "リポ電池", 12, "middle", "bold")
@@ -361,6 +358,9 @@ def w3():
     s.text(bx + 11 * k, by + 19 * k, "DRV", 10, "middle")
     s.rect(bx + 3 * k, by + 29 * k, 10 * k, 4 * k, "#fff", GRAY_S, 1, 1)
     s.text(bx + 16 * k, by + 33 * k, "LED", 9)
+    # caster hidden (drawn after the breadboard so the dashed circle stays visible)
+    s.circle(x0 + 108 * k, y0 + 30 * k, 9 * k, "none", GRAY_S, 1.3, "5 3")
+    s.text(x0 + L * k + 14, y0 + 42 * k, "ボールキャスター（下・破線）", 11, fill=GRAY_S)
     # camera at front edge
     s.rect(x0 + 115 * k, y0 + 25 * k, 6 * k, 10 * k, "#1f2933", INK, 1, 2)
     s.text(x0 + 124 * k, y0 + 23 * k, "カメラ（前向き）", 11)
@@ -408,7 +408,7 @@ def w3():
         "・走行モーターは N20 用の金具でプレートの下に固定する。",
         "・ボールキャスターはスペーサーで高さを合わせ、",
         "  車体が水平になるようにする。",
-        "・ジャンプ機構は段階③で単体の試作機を作る。この",
+        "・ジャンプ機構は Phase 1-b2 で単体の試作機を作る。この",
         "  車台には「動作確認用のカムとスイッチ」だけ載せる。",
         "・寸法は目安。部品が届いたら実測して決める。",
     ], "製作メモ")
