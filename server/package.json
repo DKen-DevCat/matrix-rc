@@ -1,0 +1,12 @@
+{
+  "name": "matrix-rc-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "中継サーバ（ブラウザ⇄機体）。依存パッケージなし",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "node --test"
+  }
+}
