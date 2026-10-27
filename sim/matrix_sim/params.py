@@ -85,6 +85,9 @@ class Params:
     # ---- 計算 ----
     timestep: float = 0.0002       # s。ばねの開放が速いので細かく
 
+    # ---- Fusion から読んだ部品（matrix_sim.parts.apply が入れる）。None なら箱と円柱で近似 ----
+    parts: tuple | None = None
+
     def with_(self, **kw) -> "Params":
         return replace(self, **kw)
 

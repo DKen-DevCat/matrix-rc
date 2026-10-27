@@ -29,9 +29,34 @@ def front_x(p: Params) -> float:
     return max(p.lower_x[1], p.upper_x[1], max(w.x for w in p.wheels) + p.wheel_radius)
 
 
+LOWER_RGBA = ".8 .8 .82 1"
+UPPER_RGBA = ".55 .7 .95 1"
+
+
+def _deck_geoms(p: Params, chassis_mass: float) -> tuple[str, str, str]:
+    """上段・下段の形。Fusion の部品があればメッシュ（座標は組み立てのまま）、なければ箱。"""
+    if p.parts:
+        assets = "".join(f'<mesh name="{q.name}" file="{q.stl.resolve()}" scale="{_v(q.stl_scale, q.stl_scale, q.stl_scale)}"/>'
+                         for q in p.parts)
+        geoms = {r: "".join(f'<geom name="{q.name}" type="mesh" mesh="{q.name}" mass="{q.mass:.6g}" '
+                            f'rgba="{LOWER_RGBA if r == "lower" else UPPER_RGBA}"/>'
+                            for q in p.parts if q.role == r) for r in ("lower", "upper")}
+        return geoms["lower"], geoms["upper"], assets
+    lx0, lx1 = p.lower_x
+    lz0, lz1 = p.lower_z
+    ux0, ux1 = p.upper_x
+    uz0, uz1 = p.upper_z
+    lower = (f'<geom name="lower" type="box" pos="{_v(_mm(lx0 + lx1) / 2, 0, _mm(lz0 + lz1) / 2)}" '
+             f'size="{_v(_mm(lx1 - lx0) / 2, _mm(p.lower_width) / 2, _mm(lz1 - lz0) / 2)}" '
+             f'mass="{chassis_mass:.6g}" rgba="{LOWER_RGBA}"/>')
+    upper = (f'<geom name="upper" type="box" pos="{_v(_mm(ux0 + ux1) / 2, 0, _mm(uz0 + uz1) / 2)}" '
+             f'size="{_v(_mm(ux1 - ux0) / 2, _mm(p.width) / 2, _mm(uz1 - uz0) / 2)}" '
+             f'mass="{p.upper_mass / 1000:.6g}" rgba="{UPPER_RGBA}"/>')
+    return lower, upper, ""
+
+
 def xml(p: Params, step_x: float | None = None) -> str:
     """step_x（m）を渡すと、そこから前に高さ step_height の段差を置く。"""
-    lx0, lx1 = p.lower_x
     lz0, lz1 = p.lower_z
     ux0, ux1 = p.upper_x
     uz0, uz1 = p.upper_z
@@ -58,6 +83,8 @@ def xml(p: Params, step_x: float | None = None) -> str:
             drive.append(f'<general name="drive_{w.driven}" joint="wheel{i}" ctrlrange="-1 1" '
                          f'gainprm="{ts:.6g}" biastype="affine" biasprm="0 0 {-ts / w0:.6g}" forcerange="{-ts:.6g} {ts:.6g}"/>')
 
+    lower_geoms, upper_geoms, assets = _deck_geoms(p, chassis_mass)
+
     step = ""
     if step_x is not None:
         h = _mm(p.step_height)
@@ -67,6 +94,7 @@ def xml(p: Params, step_x: float | None = None) -> str:
 <mujoco model="matrix-rc">
   <compiler angle="radian" autolimits="true"/>
   <option timestep="{p.timestep}" integrator="implicitfast"/>
+  <asset>{assets}</asset>
   <default>
     <geom friction="{p.floor_friction} 0.005 0.0001" solref="{p.contact_timeconst} 1" condim="3"/>
     <default class="tire"><geom condim="4" rgba=".15 .15 .15 1"/></default>
@@ -77,17 +105,13 @@ def xml(p: Params, step_x: float | None = None) -> str:
     {step}
     <body name="lower" pos="0 0 0">
       <freejoint name="root"/>
-      <geom name="lower" type="box" pos="{_v(_mm(lx0 + lx1) / 2, 0, _mm(lz0 + lz1) / 2)}"
-            size="{_v(_mm(lx1 - lx0) / 2, _mm(p.lower_width) / 2, _mm(lz1 - lz0) / 2)}"
-            mass="{chassis_mass:.6g}" rgba=".8 .8 .82 1"/>
+      {lower_geoms}
       <site name="front" pos="{_v(_mm(front_x(p)), 0, _mm(lz0 + lz1) / 2)}"/>
       {"".join(wheels)}
       <body name="upper" pos="0 0 0">
         <joint name="lift" type="slide" axis="{axis}" range="{-_mm(p.stroke)} 0"
                stiffness="{p.spring_k}" springref="0" damping="0.05" solreflimit="{p.stop_timeconst} 1"/>
-        <geom name="upper" type="box" pos="{_v(_mm(ux0 + ux1) / 2, 0, _mm(uz0 + uz1) / 2)}"
-              size="{_v(_mm(ux1 - ux0) / 2, _mm(p.width) / 2, _mm(uz1 - uz0) / 2)}"
-              mass="{p.upper_mass / 1000:.6g}" rgba=".55 .7 .95 1"/>
+        {upper_geoms}
         <site name="imu" pos="{_v(_mm(ux0 + ux1) / 2, 0, _mm(uz0 + uz1) / 2)}"/>
       </body>
     </body>

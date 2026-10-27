@@ -1,0 +1,4 @@
+# 走行用・ジャンプ用モーターの実測。1 行 1 回。電圧は測ったときの電池（またはテスター）の値
+# no_load_rpm：何もつながない回転数（軸に印を付けてスロー撮影で数える）
+# stall_force_g：軸に腕（arm_mm）を付け、キッチンスケールを押し付けて止めたときの表示（g）
+motor,volts,no_load_rpm,arm_mm,stall_force_g
