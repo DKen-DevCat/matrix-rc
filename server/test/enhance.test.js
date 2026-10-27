@@ -34,3 +34,18 @@ test('RCAS の強さは 0 が最強で、1 増えるごとに半分', () => {
   assert.equal(rcasSharp(1), 0.5);
   assert.equal(rcasSharp(2), 0.25);
 });
+
+test('PSNR と SSIM：同じ画像で ∞ と 1、違いがあれば下がる', async () => {
+  const { toGray, psnr, ssim } = await import('../../web/js/enhance/metrics.js');
+  const w = 16, h = 16;
+  const a = new Uint8ClampedArray(w * h * 4);
+  for (let i = 0; i < a.length; i += 4) { a[i] = (i / 4) % w * 16; a[i + 1] = 128; a[i + 2] = 64; a[i + 3] = 255; }
+  const b = new Uint8ClampedArray(a);
+  assert.equal(psnr(a, b), Infinity);
+  assert.ok(Math.abs(ssim(toGray(a, w, h), toGray(b, w, h), w, h) - 1) < 1e-9);
+  for (let i = 0; i < b.length; i += 4) b[i] = Math.min(255, b[i] + 10); // R を 10 ずらす
+  // MSE = 100/3（3 チャネル平均）→ PSNR = 10*log10(65025/33.33) ≈ 32.9
+  assert.ok(Math.abs(psnr(a, b) - 10 * Math.log10(65025 / (100 / 3))) < 1e-9);
+  const s = ssim(toGray(a, w, h), toGray(b, w, h), w, h);
+  assert.ok(s < 1 && s > 0.9);
+});

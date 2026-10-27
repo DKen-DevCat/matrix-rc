@@ -24,14 +24,20 @@ onmessage = (e) => {
 
 function init(m) {
   canvas = m.canvas;
+  // WebGL2 のコンテキストを一度作ると、同じ canvas で 2D には戻れない。先に有無だけ確かめる
+  if (!canvas.getContext('webgl2', { alpha: false, antialias: false, depth: false, stencil: false })) {
+    ctx2d = canvas.getContext('2d');
+    postMessage({ type: 'ready', modes: [MODES[0]], webgl: false, reason: 'WebGL2 なし' });
+    return;
+  }
   try {
     pipeline = new Pipeline(canvas);
     pipeline.setMode(m.mode);
     pipeline.setCompare(m.compare);
     postMessage({ type: 'ready', modes: MODES, webgl: true });
   } catch (err) {
-    ctx2d = canvas.getContext('2d');
-    postMessage({ type: 'ready', modes: [MODES[0]], webgl: false, reason: String(err?.message ?? err) });
+    // シェーダが通らないなどの不具合。描けないので止める（直すべきバグ）
+    postMessage({ type: 'ready', modes: [], webgl: false, reason: String(err?.message ?? err) });
   }
 }
 
@@ -43,6 +49,7 @@ async function schedule() {
   if (busy || slot.empty) return;
   busy = true;
   const jpeg = slot.take();
+  if (!pipeline && !ctx2d) { busy = false; return; } // 描く手段がない
   const t0 = performance.now();
   try {
     const bmp = await createImageBitmap(new Blob([jpeg], { type: 'image/jpeg' }));
