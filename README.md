@@ -33,6 +33,7 @@
 web/        ブラウザの操作画面（キー状態を 50Hz で送信、映像・音声・遅延を表示）
 server/     中継サーバ（Node.js。1-a は PC 内、1-b からは東京の VPS）
 firmware/   機体のファームウェア（XIAO ESP32S3 Sense）。lib/core が判断ロジック、sim/ が PC 上のシミュレータ
+sim/        物理演算による事前検証（MuJoCo）。ジャンプ・段差越え・落下を作る前に確かめる。結果は docs/sim-report.md
 docs/drawings/      図面（W=Wi-Fiモデル、C=組み上げモデル、R=中継ペア）の SVG と PNG
 docs/drawings/src/  図面の生成スクリプト
 docs/review-*.md    設計レビューの記録
@@ -58,6 +59,14 @@ cd firmware && make sim && ./build/sim --token 同じトークン --jpeg 何か�
 
 ```sh
 cd firmware && pio run -t upload && pio device monitor
+```
+
+## 物理演算による事前検証
+
+設計（3D は Autodesk Fusion）を作る前に、図面どおりに動くかを MuJoCo で確かめる。Phase 1-b1 までに整える方針（2026-10-28 決定）。詳しくは [sim/README.md](sim/README.md)、最新の結果は [docs/sim-report.md](docs/sim-report.md)。
+
+```sh
+cd sim && make setup && make test && make report
 ```
 
 ## 計画
