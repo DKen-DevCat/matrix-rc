@@ -39,7 +39,7 @@ def w1():
     s.line(910, 224, 960, 224, end="arr")
     s.box(820, 290, 170, 50, "DRV8833", ["モータードライバ"], GRAY, GRAY_S, 11, 13)
     s.box(820, 360, 170, 50, "走行モーター ×2", ["N20 約300rpm"], GRAY, GRAY_S, 11, 13)
-    s.box(1020, 290, 170, 50, "MOSFET（AO3400）", ["一方向スイッチ"], GRAY, GRAY_S, 11, 13)
+    s.box(1020, 290, 170, 50, "MOSFET（IRLU3410）", ["一方向スイッチ"], GRAY, GRAY_S, 11, 13)
     s.box(1020, 360, 170, 50, "ジャンプ用モーター", ["N20 高減速＋渦巻きカム"], GRAY, GRAY_S, 11, 13)
     s.box(1020, 430, 170, 50, "カム位置スイッチ", ["縮みきりを検知"], GRAY, GRAY_S, 11, 13)
     s.box(820, 430, 170, 50, "状態LED WS2812B", ["撮影中・経路・電池"], GRAY, GRAY_S, 11, 13)
@@ -137,7 +137,8 @@ def w2(lte=False):
     MX, MY = 250, gy - 32
     s.line(420, gy, MX + 62, gy)
     s.rect(MX, MY, 62, 64, "#fff", INK, 1.5, 4)
-    s.text(MX + 31, MY + 28, "AO3400", 11, "middle", "bold")
+    # 1-a はブレッドボードに挿せるリード部品、組み上げモデルは面実装品
+    s.text(MX + 31, MY + 28, "AO3400" if lte else "IRLU3410", 11, "middle", "bold")
     s.text(MX + 31, MY + 44, "N-ch", 10, "middle", fill=MUTED)
     s.text(MX + 68, gy - 5, "G", 10)
     s.text(MX + 31, MY + 12, "D", 10, "middle")
@@ -163,7 +164,7 @@ def w2(lte=False):
     s.poly([(dx, MY - 30), (dx, MY - 15), (MX + 31, MY - 15)])
     s.dot(MX + 31, MY - 15)
     s.dot(MX + 31, MY - 85)
-    s.text(dx - 12, MY - 34, "SS14", 10, "end")
+    s.text(dx - 12, MY - 34, "SS14" if lte else "1N5819", 10, "end")
     s.lines(MX + 58, MY - 48, ["ジャンプ用モーター", "（N20 高減速）"], 11)
     # ---- right side
     rx = X + W + 30
