@@ -79,6 +79,7 @@ class Params:
     # ---- 接触（推定。1-a の実測で合わせ込む）----
     floor_friction: float = 0.8
     contact_timeconst: float = 0.004  # s。小さいほど硬い接触
+    stop_timeconst: float = 0.002  # s。上下段のストッパー（M2 ねじの頭＋O リング）の硬さ（推定）
     step_height: float = 30.0      # 越えたい段差
 
     # ---- 計算 ----

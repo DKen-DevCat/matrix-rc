@@ -67,12 +67,20 @@ class Window:
 
     @property
     def window_ms(self) -> float:
-        """合格する発射距離の幅を、走行の速さで時間に直したもの（操作のタイミングの余裕）。"""
-        ts = self.passing
-        if not ts:
-            return 0.0
-        step = min((b - a for a, b in zip(sorted(self.rates), sorted(self.rates)[1:])), default=0)
-        return (max(ts) - min(ts) + step) / 1000 / self.speed * 1000
+        """合格する発射距離の幅を、走行の速さで時間に直したもの（操作のタイミングの余裕）。
+
+        間に不合格を挟まない、いちばん長い連続区間の端から端まで（格子の刻み分は足さない）。
+        """
+        ts = sorted(self.rates)
+        run_start = None
+        span = 0.0
+        for t in ts:
+            if self.rates[t] >= self.threshold:
+                run_start = t if run_start is None else run_start
+                span = max(span, t - run_start)
+            else:
+                run_start = None
+        return span / 1000 / self.speed * 1000
 
 
 def evaluate(base: Params, options: list[Option], triggers: list[float],

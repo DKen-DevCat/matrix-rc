@@ -84,26 +84,30 @@ def run(v: Vehicle, seconds: float, each=None) -> None:
 @dataclass(frozen=True)
 class JumpResult:
     lift_mm: float          # 車輪の下端が地面から上がった最大の高さ
-    airtime_s: float        # 全輪が地面から離れていた時間
+    airtime_s: float        # 1 回目の離陸から 1 回目の着地まで（全輪が地面から離れていた時間）
     upright: float          # 着地後の姿勢（1 で水平）
-    peak_accel_g: float     # 着地までの上段の最大加速度
+    peak_accel_g: float     # 発射から着地後の落ち着きまでの、上段の最大加速度
 
 
 def jump_in_place(p: Params) -> JumpResult:
     v = Vehicle(p)
     run(v, 0.2)  # 置いた直後の揺れを落ち着かせる
     v.release()
-    best, air, peak = 0.0, 0.0, 0.0
+    best, peak = 0.0, 0.0
+    took_off = landed = None
 
     def watch(v: Vehicle):
-        nonlocal best, air, peak
+        nonlocal best, peak, took_off, landed
         z = v.wheel_bottom_min()
         best = max(best, z)
-        if z > 0.001:
-            air += p.timestep
+        if took_off is None and z > 0.001:
+            took_off = v.t
+        elif took_off is not None and landed is None and z <= 0.001:
+            landed = v.t
         peak = max(peak, v.accel_g())
 
     run(v, 0.8, watch)
+    air = 0.0 if took_off is None else (landed if landed is not None else v.t) - took_off
     return JumpResult(best * 1000, air, v.upright(), peak)
 
 

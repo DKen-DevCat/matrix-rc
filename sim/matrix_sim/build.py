@@ -84,7 +84,7 @@ def xml(p: Params, step_x: float | None = None) -> str:
       {"".join(wheels)}
       <body name="upper" pos="0 0 0">
         <joint name="lift" type="slide" axis="{axis}" range="{-_mm(p.stroke)} 0"
-               stiffness="{p.spring_k}" springref="0" damping="0.05"/>
+               stiffness="{p.spring_k}" springref="0" damping="0.05" solreflimit="{p.stop_timeconst} 1"/>
         <geom name="upper" type="box" pos="{_v(_mm(ux0 + ux1) / 2, 0, _mm(uz0 + uz1) / 2)}"
               size="{_v(_mm(ux1 - ux0) / 2, _mm(p.width) / 2, _mm(uz1 - uz0) / 2)}"
               mass="{p.upper_mass / 1000:.6g}" rgba=".55 .7 .95 1"/>
