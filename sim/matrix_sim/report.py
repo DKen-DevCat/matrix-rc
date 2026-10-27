@@ -13,7 +13,7 @@ import zlib
 import mujoco
 import numpy as np
 
-from . import cam, checks, scenarios
+from . import calibrate, cam, checks, parts, scenarios
 from .build import front_x
 from .params import DESIGN, Params
 from .sweep import PASS, TRIALS, Option, evaluate
@@ -61,7 +61,7 @@ def filmstrip(p: Params, trigger_mm: float, path: Path, times=(-0.05, 0.03, 0.08
     _png(path, np.concatenate(frames, axis=1))
 
 
-def build(quick: bool = False) -> str:
+def build(quick: bool = False, base: Params = DESIGN, measured: tuple[str, ...] = (), source: str = "") -> str:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     trials = 1 if quick else TRIALS
     triggers = TRIGGERS[::2] if quick else TRIGGERS
@@ -69,15 +69,20 @@ def build(quick: bool = False) -> str:
         "# 物理演算による事前検証の結果",
         "",
         f"生成：{datetime.date.today()}（`cd sim && make report`）。数値の前提は `sim/matrix_sim/params.py`、限界は `sim/README.md`。",
-        "推定値（モーターの特性・摩擦・接触の硬さ）は Phase 1-a の実測で合わせ込むまで目安として読む。",
+        f"形状：{'Fusion から書き出した部品（' + source + '）' if base.parts else '箱と円柱の近似（図面 C3 の寸法）'}。"
+        f"実測で置き換えた値：{'、'.join(measured) if measured else 'なし（モーターの特性・摩擦・接触の硬さは推定値。実測で合わせ込むまで目安として読む）'}。",
         "",
-        "## 1. 寸法の干渉（図面 C3）",
+        f"## 1. 寸法の干渉（{'Fusion の外形' if base.parts else '図面 C3'}）",
         "",
     ]
-    issues = checks.all_issues(DESIGN)
+    issues = checks.all_issues(base)
     lines += [f"- {i.what}（{i.overlap_mm:g}mm）" for i in issues] or ["- なし"]
+    if base.parts:
+        lines += ["", "重心（Fusion の値とメッシュから計算した値の差。2mm を超えたら、密度の違う部品を分けて書き出す）："]
+        lines += [f"- {'上段' if r == 'upper' else '下段'}：{d:.1f}mm" + ("　**要確認**" if d > 2 else "")
+                  for r, d in parts.com_mismatch_mm(base).items()]
 
-    c = cam.analyze(DESIGN)
+    c = cam.analyze(base)
     lines += [
         "",
         "## 2. カムとジャンプ用モーター（計算）",
@@ -85,7 +90,7 @@ def build(quick: bool = False) -> str:
         "| 項目 | 値 |",
         "|---|---|",
         f"| 必要トルク（摩擦なし／摩擦込み） | {c.peak_torque_ideal:.3f} ／ {c.peak_torque:.3f} N·m |",
-        f"| 高減速 N20 の停動トルク（{DESIGN.battery_v}V、推定） | {c.stall_torque:.3f} N·m |",
+        f"| 高減速 N20 の停動トルク（{base.battery_v}V、{'実測' if 'jump_motor' in measured else '推定'}） | {c.stall_torque:.3f} N·m |",
         f"| 停動トルクに対する割合 | {c.margin * 100:.0f}%（基準 50% 以下） |",
         f"| チャージ時間（発射 → 次のチャージ完了） | {c.charge_time:.2f} 秒（目標 3〜4 秒） |",
         "",
@@ -95,15 +100,15 @@ def build(quick: bool = False) -> str:
         "|---|---|---|---|---|",
     ]
     for tilt in (0, 10, 15, 20, 25, 30):
-        j = scenarios.jump_in_place(DESIGN.with_(tilt_deg=tilt))
+        j = scenarios.jump_in_place(base.with_(tilt_deg=tilt))
         pose = "水平" if j.upright > 0.9 else ("傾く" if j.upright > 0 else "ひっくり返る")
         lines.append(f"| {tilt}° | {j.lift_mm:.0f}mm | {j.airtime_s:.2f} 秒 | {pose} | {j.peak_accel_g:.0f}g |")
 
-    windows = evaluate(DESIGN, OPTIONS, triggers, trials=trials)
+    windows = evaluate(base, OPTIONS, triggers, trials=trials)
     head = " | ".join(f"{t}" for t in triggers)
     lines += [
         "",
-        f"## 4. 助走付きの段差越え（高さ {DESIGN.step_height:g}mm）",
+        f"## 4. 助走付きの段差越え（高さ {base.step_height:g}mm）",
         "",
         f"発射した瞬間の「車体の前端から段差までの距離」（mm）ごとに、{trials} 回中の成功回数。"
         + ("" if quick else f"ばらつき：床の摩擦 0.5〜1.0、上段の質量 ±10%、ばね ±10%、発射タイミング ±20ms。合格は {PASS} 回以上（設計書② 1章）。"),
@@ -123,10 +128,10 @@ def build(quick: bool = False) -> str:
 
     lines += ["", "コマ送り（横から。発射の直前 → 0.03 → 0.08 → 0.14 → 0.22 → 0.6 秒後）：", ""]
     for o, t, name in ((Option(0, "300rpm"), 20, "step_current"), (Option(20, "500rpm"), 25, "step_tilt20_500")):
-        filmstrip(o.params(DESIGN), t, OUT_DIR / f"{name}.png")
+        filmstrip(o.params(base), t, OUT_DIR / f"{name}.png")
         lines += [f"- {o.label}、{t}mm 手前で発射", "", f"  ![{o.label}](sim/{name}.png)", ""]
 
-    dr = scenarios.drop_test(DESIGN, 300)
+    dr = scenarios.drop_test(base, 300)
     lines += [
         "## 5. 落下（30cm、設計書② 8章）",
         "",
@@ -143,8 +148,16 @@ def build(quick: bool = False) -> str:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--quick", action="store_true")
+    ap.add_argument("--parts", type=Path, help="Fusion から書き出したフォルダ（parts.json のある場所）")
+    ap.add_argument("--measured", action="store_true", help="sim/calibration/*.csv の実測値を使う")
     a = ap.parse_args()
-    OUT_MD.write_text(build(a.quick))
+    base, measured = DESIGN, ()
+    if a.measured:
+        o = calibrate.overrides()
+        base, measured = base.with_(**o), tuple(o)
+    if a.parts:
+        base = parts.apply(base, parts.load_parts(a.parts))
+    OUT_MD.write_text(build(a.quick, base, measured, str(a.parts or "")))
     print(f"wrote {OUT_MD.relative_to(ROOT)}")
 
 

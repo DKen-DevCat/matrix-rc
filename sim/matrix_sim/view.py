@@ -3,12 +3,13 @@
     mjpython -m matrix_sim.view --tilt 20 --motor 500rpm --trigger 25
 """
 import argparse
+from pathlib import Path
 import time
 
 import mujoco
 import mujoco.viewer
 
-from . import scenarios
+from . import calibrate, parts, scenarios
 from .build import front_x
 from .params import DESIGN
 from .sweep import MOTORS
@@ -20,9 +21,14 @@ def main() -> None:
     ap.add_argument("--motor", choices=list(MOTORS), default="500rpm")
     ap.add_argument("--trigger", type=float, default=25, help="発射する段差までの距離 mm")
     ap.add_argument("--slow", type=float, default=4, help="スロー再生の倍率")
+    ap.add_argument("--parts", type=Path, help="Fusion から書き出したフォルダ")
+    ap.add_argument("--measured", action="store_true", help="sim/calibration/*.csv の実測値を使う")
     a = ap.parse_args()
 
-    p = DESIGN.with_(tilt_deg=a.tilt, drive_motor=MOTORS[a.motor])
+    base = calibrate.measured() if a.measured else DESIGN
+    p = base.with_(tilt_deg=a.tilt, drive_motor=MOTORS[a.motor])
+    if a.parts:
+        p = parts.apply(p, parts.load_parts(a.parts))
     step_x = front_x(p) / 1000 + scenarios.RUN_UP
     v = scenarios.Vehicle(p, step_x=step_x)
     v.throttle = p.throttle

@@ -1,0 +1,10 @@
+{
+  "autodeskProduct": "Fusion",
+  "type": "script",
+  "author": "matrix-rc",
+  "description": {
+    "": "物理演算（sim/）用に、役割付きの部品を STL と parts.json で書き出す"
+  },
+  "supportedOS": "windows|mac",
+  "editEnabled": true
+}
