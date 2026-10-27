@@ -139,6 +139,8 @@ const videoOut = createVideoOut($('video'), {
     enhanceSel.disabled = !webgl;
     compareChk.checked = storage.get('mrc.compare') === '1';
     if (!webgl) $('enh').textContent = `使えません（${reason ?? 'WebGL2 なし'}）`;
+    // 実験ページ（lab.html）で決めた設定があれば使う
+    try { videoOut.setParams(JSON.parse(storage.get('mrc.enhance.params') ?? 'null') ?? {}); } catch { /* 壊れていれば既定値 */ }
   },
   onDrawn({ decodeMs, drawMs: d, dropped }) {
     frames++;
