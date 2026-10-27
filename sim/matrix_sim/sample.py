@@ -41,6 +41,17 @@ def cylinder_y(center, r, width, n=48) -> np.ndarray:
     return np.array(tris)
 
 
+def outward(tris: np.ndarray) -> np.ndarray:
+    """閉じた三角形の集まりの向きを外向きにそろえる（符号付き体積が正になるように）。"""
+    vol = np.einsum("ij,ij->i", tris[:, 0], np.cross(tris[:, 1], tris[:, 2])).sum() / 6
+    return tris if vol > 0 else tris[:, [0, 2, 1]]
+
+
+def read_tris(path: Path) -> np.ndarray:
+    from .parts import read_stl_vertices
+    return read_stl_vertices(path).reshape(-1, 3, 3)
+
+
 def write_stl(path: Path, tris: np.ndarray) -> None:
     out = [b"matrix-rc sample".ljust(80, b"\0"), struct.pack("<I", len(tris))]
     for t in tris:
@@ -65,6 +76,7 @@ def make(folder: Path, p: Params = DESIGN) -> None:
         shapes[name] = (cylinder_y((w.x, w.y, p.wheel_radius), p.wheel_radius, p.wheel_width), p.wheel_mass)
     entries = []
     for name, (tris, grams) in shapes.items():
+        tris = outward(tris)
         write_stl(folder / f"{name}.stl", tris)
         v = tris.reshape(-1, 3) / 1000
         entries.append({

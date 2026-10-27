@@ -46,3 +46,14 @@ def test_friction_takes_slipperiest_surface(tmp_path):
     _write(tmp_path, "friction.csv", "surface,slip_angle_deg\ntile,30\ntile,32\ncarpet,40\n")
     mu = calibrate.overrides(tmp_path)["floor_friction"]
     assert mu == pytest.approx((math.tan(math.radians(30)) + math.tan(math.radians(32))) / 2)
+
+
+def test_repeated_motor_measurements_are_averaged(tmp_path):
+    _write(tmp_path, "motor.csv",
+           "motor,volts,no_load_rpm,arm_mm,stall_force_g\n"
+           "drive,3.8,170,20,100\n"
+           "drive,3.8,190,20,300\n"
+           "drive,3.0,140,20,150\n")
+    m = calibrate.overrides(tmp_path)["drive_motor"]
+    assert m.no_load_rpm == pytest.approx(180)
+    assert m.stall_torque == pytest.approx(0.2 * 9.81 * 0.02)

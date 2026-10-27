@@ -77,6 +77,10 @@ def build(quick: bool = False, base: Params = DESIGN, measured: tuple[str, ...] 
     ]
     issues = checks.all_issues(base)
     lines += [f"- {i.what}（{i.overlap_mm:g}mm）" for i in issues] or ["- なし"]
+    if base.parts:
+        lines += ["", "重心（Fusion の値とメッシュから計算した値の差。2mm を超えたら、密度の違う部品を分けて書き出す）："]
+        lines += [f"- {'上段' if r == 'upper' else '下段'}：{d:.1f}mm" + ("　**要確認**" if d > 2 else "")
+                  for r, d in parts.com_mismatch_mm(base).items()]
 
     c = cam.analyze(base)
     lines += [

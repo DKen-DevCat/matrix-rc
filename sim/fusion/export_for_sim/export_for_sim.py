@@ -68,8 +68,8 @@ def run(context):
             opts.isBinaryFormat = True
             opts.meshRefinement = adsk.fusion.MeshRefinementSettings.MeshRefinementMedium
             em.execute(opts)
-            props = occ.physicalProperties
-            bb = occ.boundingBox
+            props = occ.getPhysicalProperties(adsk.fusion.CalculationAccuracy.HighCalculationAccuracy)
+            bb = occ.preciseBoundingBox  # boundingBox は大きめになることがある（車輪の半径と単位の判定に使うので正確な方）
             entries.append({
                 "name": name,
                 "stl": stl,

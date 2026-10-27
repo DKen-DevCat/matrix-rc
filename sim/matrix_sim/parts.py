@@ -99,6 +99,9 @@ def apply(base: Params, parts: list[Part]) -> Params:
     wheels, radius, width = [], 0.0, 0.0
     for p in sorted(by["wheel"], key=lambda p: p.name):
         c = p.center * 1000
+        if abs(c[2] - p.size[2] * 500) > 0.5:
+            raise ValueError(f"{p.name} の中心の高さ（{c[2]:.1f}mm）が半径（{p.size[2] * 500:.1f}mm）と合わない。"
+                             "原点を地面（タイヤの接地面）に置いているか確かめる（sim/fusion/README.md）")
         wheels.append(Wheel(float(c[0]), float(c[1]), DRIVEN[p.name]))
         radius = max(radius, p.size[2] * 500)
         width = max(width, p.size[1] * 1000)
@@ -113,3 +116,20 @@ def apply(base: Params, parts: list[Part]) -> Params:
         wheel_mass=sum(p.mass for p in by["wheel"]) * 1000 / len(by["wheel"]),
         parts=tuple(p for p in parts if p.role in ("upper", "lower")),
     )
+
+
+def com_mismatch_mm(p: Params) -> dict[str, float]:
+    """上段・下段の重心について、Fusion の値（部品ごとの質量で重み付け）と MuJoCo がメッシュから計算した値の差 mm。
+
+    部品の中に密度の違う物（金属のモーターと樹脂の板など）をまとめて書き出すと、MuJoCo は密度一様として計算するのでずれる。
+    """
+    from .build import load  # build が parts を使うので、循環を避けてここで読む
+
+    h = load(p)
+    out = {}
+    for role, body in (("lower", h.lower_body), ("upper", h.upper_body)):
+        ps = [q for q in p.parts if q.role == role]
+        m = sum(q.mass for q in ps)
+        fusion = sum(np.array(q.com) * q.mass for q in ps) / m
+        out[role] = float(np.linalg.norm(h.model.body_ipos[body] - fusion) * 1000)
+    return out

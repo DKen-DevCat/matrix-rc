@@ -25,12 +25,17 @@ def _rows(path: Path) -> list[dict]:
 
 
 def motor_from_rows(rows: list[dict], volts: float) -> Motor | None:
-    """電池電圧にいちばん近い測定から、その電圧を定格とするモーターを作る（直線モデルなので電圧で比例させられる）。"""
+    """電池電圧にいちばん近い電圧の測定（何回かあれば平均）から、その電圧を定格とするモーターを作る。
+
+    直線モデルなので、ほかの電圧へは比例させられる。
+    """
     if not rows:
         return None
-    r = min(rows, key=lambda r: abs(float(r["volts"]) - volts))
-    stall = float(r["stall_force_g"]) / 1000 * G * float(r["arm_mm"]) / 1000
-    return Motor(rated_v=float(r["volts"]), no_load_rpm=float(r["no_load_rpm"]), stall_torque=stall)
+    v = min((float(r["volts"]) for r in rows), key=lambda x: abs(x - volts))
+    at = [r for r in rows if float(r["volts"]) == v]
+    rpm = sum(float(r["no_load_rpm"]) for r in at) / len(at)
+    stall = sum(float(r["stall_force_g"]) / 1000 * G * float(r["arm_mm"]) / 1000 for r in at) / len(at)
+    return Motor(rated_v=v, no_load_rpm=rpm, stall_torque=stall)
 
 
 def spring_rate_from_rows(rows: list[dict]) -> float | None:

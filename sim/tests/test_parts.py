@@ -79,3 +79,45 @@ def test_unknown_names_are_ignored(tmp_path):
     (tmp_path / "parts.json").write_text(json.dumps(meta))
     p = parts.apply(DESIGN, parts.load_parts(tmp_path))
     assert p.upper_mass == pytest.approx(DESIGN.upper_mass)
+
+
+def _edit(tmp_path, fn):
+    sample.make(tmp_path)
+    meta = json.loads((tmp_path / "parts.json").read_text())
+    fn(meta)
+    (tmp_path / "parts.json").write_text(json.dumps(meta))
+    return parts.load_parts(tmp_path)
+
+
+def test_wheel_center_must_sit_at_its_radius(tmp_path):
+    # 原点が地面にない（または車輪が浮いている）書き出しは、組み立ての約束違反として止める
+    def lift_wheel(meta):
+        w = next(e for e in meta["parts"] if e["name"] == "wheel_fl")
+        w["bbox_min"][2] += 0.002
+        w["bbox_max"][2] += 0.002
+    with pytest.raises(ValueError, match="wheel_fl"):
+        parts.apply(DESIGN, _edit(tmp_path, lift_wheel))
+
+
+def test_com_matches_for_sample():
+    p = parts.apply(DESIGN, parts.load_parts(SAMPLE))
+    assert all(d < 0.5 for d in parts.com_mismatch_mm(p).values())
+
+
+def test_com_mismatch_is_reported(tmp_path):
+    # 合成した部品の中に密度の違う物（金属のモーターなど）があると、メッシュから計算した重心がずれる
+    def heavy_front(meta):
+        d = next(e for e in meta["parts"] if e["name"] == "lower_deck")
+        d["com"][0] += 0.010
+    p = parts.apply(DESIGN, _edit(tmp_path, heavy_front))
+    assert parts.com_mismatch_mm(p)["lower"] == pytest.approx(10, abs=0.5)
+
+
+def test_stl_in_cm_is_scaled(tmp_path):
+    sample.make(tmp_path)
+    for stl in tmp_path.glob("*.stl"):
+        tris = sample.read_tris(stl)
+        sample.write_stl(stl, tris / 10)
+    p = parts.apply(DESIGN, parts.load_parts(tmp_path))
+    assert all(q.stl_scale == 0.01 for q in p.parts)
+    assert scenarios.jump_in_place(p).lift_mm == pytest.approx(scenarios.jump_in_place(DESIGN).lift_mm, rel=0.03)
