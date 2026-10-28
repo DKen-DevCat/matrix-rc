@@ -1,6 +1,6 @@
 """その場ジャンプと落下（設計書② 7章・8章）。"""
 from matrix_sim import scenarios
-from matrix_sim.params import DESIGN
+from matrix_sim.params import DESIGN, N20_300RPM
 
 
 def test_design_jumps_at_least_40mm():
@@ -16,15 +16,18 @@ def test_tilt_trades_height_for_forward_speed():
     assert tilted < flat
 
 
-def test_tilt_up_to_20_degrees_lands_upright():
-    for tilt in (10, 15, 20):
+def test_tilt_up_to_15_degrees_lands_upright():
+    for tilt in (10, 15):
         assert scenarios.jump_in_place(DESIGN.with_(tilt_deg=tilt)).upright > 0.9, tilt
 
 
 def test_tilt_25_degrees_and_more_tips_over():
-    # 見つかったこと：25° で鼻から落ちて立ち、30° ではひっくり返る（前傾は 20° までにする）
-    assert scenarios.jump_in_place(DESIGN.with_(tilt_deg=25)).upright < 0.5
-    assert scenarios.jump_in_place(DESIGN.with_(tilt_deg=30)).upright < 0
+    # 見つかったこと：上段を 6mm 上げた（2026-10-28）ことで重心が上がり、前傾 20° のその場ジャンプは境目になった
+    # （走行モーターの電気ブレーキの強さで、300rpm だと鼻から落ち、1000rpm だと立つ。境目なので固定せず、レポート 3 章に注記する）。
+    # 25° 以上は走行モーターによらずひっくり返る
+    for m in (N20_300RPM, DESIGN.drive_motor):
+        assert scenarios.jump_in_place(DESIGN.with_(tilt_deg=25, drive_motor=m)).upright < 0.5
+        assert scenarios.jump_in_place(DESIGN.with_(tilt_deg=30, drive_motor=m)).upright < 0
 
 
 def test_drop_from_300mm_lands_upright():

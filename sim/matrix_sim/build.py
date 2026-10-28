@@ -9,6 +9,7 @@ import math
 
 import mujoco
 
+from . import checks
 from .params import Params
 
 # カムがばねを縮めた状態で保持する強さ（20N で 0.2mm しかずれない）。発射で 0 にする
@@ -69,7 +70,7 @@ def xml(p: Params, step_x: float | None = None) -> str:
     w0, ts = p.drive_motor.at(p.battery_v)
     wheels = []
     for i, w in enumerate(p.wheels):
-        armature = p.drive_armature if w.driven else 0.0
+        armature = p.drive_motor.reflected_inertia if w.driven else 0.0
         wheels.append(f"""
       <body name="wheel{i}" pos="{_v(_mm(w.x), _mm(w.y), r)}">
         <joint name="wheel{i}" type="hinge" axis="0 1 0" armature="{armature:.6g}" damping="1e-6"/>
@@ -117,7 +118,7 @@ def xml(p: Params, step_x: float | None = None) -> str:
     </body>
   </worldbody>
   <contact>
-    {"".join(f'<exclude body1="upper" body2="wheel{i}"/>' for i in range(len(p.wheels)))}
+    {"".join(f'<exclude body1="upper" body2="wheel{i}"/>' for i in range(len(p.wheels))) if checks.all_issues(p) else ""}
   </contact>
   <actuator>
     {"".join(drive)}
