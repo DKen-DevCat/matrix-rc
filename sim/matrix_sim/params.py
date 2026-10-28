@@ -23,10 +23,14 @@ class Motor:
 
     @property
     def reflected_inertia(self) -> float:
-        """減速後の軸から見たロータの慣性 kg·m²。N20 100:1（300rpm）を 2e-6 とし、減速比は回転数に反比例するとして推定。"""
+        """減速後の軸から見たロータの慣性 kg·m²。N20 100:1（6V で 300rpm）を 2e-6 とし、減速比は回転数に反比例するとして推定。
+
+        実測のモーターは電池電圧を定格にして作られる（calibrate）ので、回転数を 6V 相当に直してから比べる。
+        """
         if self.armature is not None:
             return self.armature
-        return ARMATURE_100_1 * (300.0 / self.no_load_rpm) ** 2
+        rpm_at_6v = self.no_load_rpm * 6.0 / self.rated_v
+        return ARMATURE_100_1 * (300.0 / rpm_at_6v) ** 2
 
 
 # N20 100:1 の、減速後の軸から見たロータの慣性（推定）

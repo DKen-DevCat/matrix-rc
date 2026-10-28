@@ -15,7 +15,7 @@ import numpy as np
 
 from . import calibrate, cam, checks, parts, scenarios
 from .build import front_x
-from .params import DESIGN, Params
+from .params import N20_300RPM, DESIGN, Params
 from .sweep import adopted_option, PASS, TRIALS, Option, evaluate
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -62,6 +62,10 @@ def filmstrip(p: Params, trigger_mm: float, path: Path, times=(-0.05, 0.03, 0.08
     _png(path, np.concatenate(frames, axis=1))
 
 
+def _pose(upright: float) -> str:
+    return "水平" if upright > 0.9 else ("傾く" if upright > 0 else "ひっくり返る")
+
+
 def build(quick: bool = False, base: Params = DESIGN, measured: tuple[str, ...] = (), source: str = "") -> str:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     trials = 1 if quick else TRIALS
@@ -70,16 +74,16 @@ def build(quick: bool = False, base: Params = DESIGN, measured: tuple[str, ...] 
         "# 物理演算による事前検証の結果",
         "",
         f"生成：{datetime.date.today()}（`cd sim && make report`）。数値の前提は `sim/matrix_sim/params.py`、限界は `sim/README.md`。",
-        f"形状：{'Fusion から書き出した部品（' + source + '）' if base.parts else '箱と円柱の近似（図面 C3 の寸法）'}。"
+        f"形状：{'部品モデル（' + source + '）' if base.parts else '箱と円柱の近似（図面 C3 の寸法）'}。"
         f"実測で置き換えた値：{'、'.join(measured) if measured else 'なし（モーターの特性・摩擦・接触の硬さは推定値。実測で合わせ込むまで目安として読む）'}。",
         "",
-        f"## 1. 寸法の干渉（{'Fusion の外形' if base.parts else '図面 C3'}）",
+        f"## 1. 寸法の干渉（{'部品の外形' if base.parts else '図面 C3'}）",
         "",
     ]
     issues = checks.all_issues(base)
     lines += [f"- {i.what}（{i.overlap_mm:g}mm）" for i in issues] or ["- なし"]
     if base.parts:
-        lines += ["", "重心（Fusion の値とメッシュから計算した値の差。2mm を超えたら、密度の違う部品を分けて書き出す）："]
+        lines += ["", "重心（parts.json の値とメッシュから計算した値の差。2mm を超えたら、密度の違う部品を分けて書き出す）："]
         lines += [f"- {'上段' if r == 'upper' else '下段'}：{d:.1f}mm" + ("　**要確認**" if d > 2 else "")
                   for r, d in parts.com_mismatch_mm(base).items()]
 
@@ -97,15 +101,17 @@ def build(quick: bool = False, base: Params = DESIGN, measured: tuple[str, ...] 
         "",
         "## 3. その場ジャンプ（前傾角ごと）",
         "",
-        f"走行モーターは採用案（{adopted_option(base).motor}）。前傾 20° の着地は走行モーターの電気ブレーキの強さで変わる境目（300rpm だと鼻から落ちる）。",
+        f"走行モーターは採用案（{adopted_option(base).motor}）。"
+        + "前傾 20° の着地は走行モーターの電気ブレーキ（逆起電力）の強さでも変わる："
+        + "、".join(f"{name} だと{_pose(scenarios.jump_in_place(base.with_(tilt_deg=20, drive_motor=m)).upright)}"
+                   for name, m in (("300rpm", N20_300RPM), (adopted_option(base).motor, base.drive_motor))) + "。",
         "",
         "| 前傾 | 車輪の上がった高さ | 滞空（1 回目） | 着地後の姿勢 | 上段の最大加速度（発射〜着地） |",
         "|---|---|---|---|---|",
     ]
     for tilt in (0, 10, 15, 20, 25, 30):
         j = scenarios.jump_in_place(base.with_(tilt_deg=tilt))
-        pose = "水平" if j.upright > 0.9 else ("傾く" if j.upright > 0 else "ひっくり返る")
-        lines.append(f"| {tilt}° | {j.lift_mm:.0f}mm | {j.airtime_s:.2f} 秒 | {pose} | {j.peak_accel_g:.0f}g |")
+        lines.append(f"| {tilt}° | {j.lift_mm:.0f}mm | {j.airtime_s:.2f} 秒 | {_pose(j.upright)} | {j.peak_accel_g:.0f}g |")
 
     adopted = adopted_option(base)
     options = [adopted] + [o for o in OPTIONS if o != adopted]
@@ -129,7 +135,7 @@ def build(quick: bool = False, base: Params = DESIGN, measured: tuple[str, ...] 
             cells = " | ".join(f"**{w.rates[t]}**" if w.rates[t] >= w.threshold else str(w.rates[t]) for t in triggers)
             lines.append(f"| {w.option.label} | {w.speed:.2f}m/s | {cells} | {w.window_ms:.0f}ms |")
             for t in triggers:
-                wr.writerow([w.option.tilt_deg, w.option.motor, f"{w.speed:.3f}", t, w.rates[t], trials])
+                wr.writerow([f"{w.option.tilt_deg:g}", w.option.motor, f"{w.speed:.3f}", t, w.rates[t], trials])
 
     lines += ["", "コマ送り（横から。発射の直前 → 0.03 → 0.08 → 0.14 → 0.22 → 0.6 秒後）：", ""]
     for o, t, name in ((adopted, 40, "step_current"), (Option(0, "300rpm"), 20, "step_old_300"), (Option(20, "500rpm"), 25, "step_tilt20_500")):
@@ -153,7 +159,7 @@ def build(quick: bool = False, base: Params = DESIGN, measured: tuple[str, ...] 
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--quick", action="store_true")
-    ap.add_argument("--parts", type=Path, help="Fusion から書き出したフォルダ（parts.json のある場所）")
+    ap.add_argument("--parts", type=Path, help="部品モデルのフォルダ（parts.json のある場所。make model が作る model/export など）")
     ap.add_argument("--measured", action="store_true", help="sim/calibration/*.csv の実測値を使う")
     a = ap.parse_args()
     base, measured = DESIGN, ()
