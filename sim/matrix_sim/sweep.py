@@ -8,10 +8,10 @@ from dataclasses import dataclass
 import math
 import random
 
-from .params import N20_300RPM, N20_500RPM, Params
+from .params import N20_300RPM, N20_500RPM, N20_800RPM, N20_1000RPM, Motor, Params
 from . import scenarios
 
-MOTORS = {"300rpm": N20_300RPM, "500rpm": N20_500RPM}
+MOTORS = {"300rpm": N20_300RPM, "500rpm": N20_500RPM, "800rpm": N20_800RPM, "1000rpm": N20_1000RPM}
 TRIALS = 10
 PASS = 8
 
@@ -19,14 +19,23 @@ PASS = 8
 @dataclass(frozen=True)
 class Option:
     tilt_deg: float
-    motor: str  # MOTORS のキー
+    motor: str  # MOTORS のキー（motor_obj を持つときは表示名）
+    motor_obj: Motor | None = None  # MOTORS にないモーター（実測値など）を使うとき
 
     def params(self, base: Params) -> Params:
-        return base.with_(tilt_deg=self.tilt_deg, drive_motor=MOTORS[self.motor])
+        return base.with_(tilt_deg=self.tilt_deg, drive_motor=self.motor_obj or MOTORS[self.motor])
 
     @property
     def label(self) -> str:
         return f"前傾 {self.tilt_deg:g}°・{self.motor}"
+
+
+def adopted_option(base: Params) -> Option:
+    """base（params.py の既定、または実測で置き換えたもの）そのものを表す案。レポートの先頭に置く。"""
+    for name, m in MOTORS.items():
+        if m == base.drive_motor:
+            return Option(base.tilt_deg, name)
+    return Option(base.tilt_deg, "実測", base.drive_motor)
 
 
 def perturb(p: Params, seed: int) -> tuple[Params, float]:

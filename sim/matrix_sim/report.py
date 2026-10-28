@@ -16,13 +16,14 @@ import numpy as np
 from . import calibrate, cam, checks, parts, scenarios
 from .build import front_x
 from .params import DESIGN, Params
-from .sweep import PASS, TRIALS, Option, evaluate
+from .sweep import adopted_option, PASS, TRIALS, Option, evaluate
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT_MD = ROOT / "docs" / "sim-report.md"
 OUT_DIR = ROOT / "docs" / "sim"
 
-OPTIONS = [Option(t, m) for t in (0, 10, 15, 20, 25) for m in ("300rpm", "500rpm")]
+# 採用案は前傾 0°・1000rpm（2026-10-28）。前傾 0° は走行モーター 4 種、前傾案は 300／500rpm で比較する
+OPTIONS = [Option(0, m) for m in ("300rpm", "500rpm", "800rpm", "1000rpm")] + [Option(t, m) for t in (10, 15, 20) for m in ("300rpm", "500rpm")]
 TRIGGERS = list(range(0, 61, 5))
 
 
@@ -96,6 +97,8 @@ def build(quick: bool = False, base: Params = DESIGN, measured: tuple[str, ...] 
         "",
         "## 3. その場ジャンプ（前傾角ごと）",
         "",
+        f"走行モーターは採用案（{adopted_option(base).motor}）。前傾 20° の着地は走行モーターの電気ブレーキの強さで変わる境目（300rpm だと鼻から落ちる）。",
+        "",
         "| 前傾 | 車輪の上がった高さ | 滞空（1 回目） | 着地後の姿勢 | 上段の最大加速度（発射〜着地） |",
         "|---|---|---|---|---|",
     ]
@@ -104,7 +107,9 @@ def build(quick: bool = False, base: Params = DESIGN, measured: tuple[str, ...] 
         pose = "水平" if j.upright > 0.9 else ("傾く" if j.upright > 0 else "ひっくり返る")
         lines.append(f"| {tilt}° | {j.lift_mm:.0f}mm | {j.airtime_s:.2f} 秒 | {pose} | {j.peak_accel_g:.0f}g |")
 
-    windows = evaluate(base, OPTIONS, triggers, trials=trials)
+    adopted = adopted_option(base)
+    options = [adopted] + [o for o in OPTIONS if o != adopted]
+    windows = evaluate(base, options, triggers, trials=trials)
     head = " | ".join(f"{t}" for t in triggers)
     lines += [
         "",
@@ -127,7 +132,7 @@ def build(quick: bool = False, base: Params = DESIGN, measured: tuple[str, ...] 
                 wr.writerow([w.option.tilt_deg, w.option.motor, f"{w.speed:.3f}", t, w.rates[t], trials])
 
     lines += ["", "コマ送り（横から。発射の直前 → 0.03 → 0.08 → 0.14 → 0.22 → 0.6 秒後）：", ""]
-    for o, t, name in ((Option(0, "300rpm"), 20, "step_current"), (Option(20, "500rpm"), 25, "step_tilt20_500")):
+    for o, t, name in ((adopted, 40, "step_current"), (Option(0, "300rpm"), 20, "step_old_300"), (Option(20, "500rpm"), 25, "step_tilt20_500")):
         filmstrip(o.params(base), t, OUT_DIR / f"{name}.png")
         lines += [f"- {o.label}、{t}mm 手前で発射", "", f"  ![{o.label}](sim/{name}.png)", ""]
 

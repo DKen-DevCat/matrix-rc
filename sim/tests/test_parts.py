@@ -36,7 +36,7 @@ def test_sample_reproduces_design_dimensions():
     assert p.lower_mass == pytest.approx(DESIGN.lower_mass)
     assert {w.driven for w in p.wheels} == {"left", "right", None}
     assert front_x(p) == pytest.approx(front_x(DESIGN), abs=0.1)
-    assert len(checks.all_issues(p)) == 4  # 干渉の確認も同じ結果になる
+    assert checks.all_issues(p) == []  # 干渉の確認も同じ結果になる（上段を上げたので当たらない）
 
 
 def test_mesh_model_jumps_like_box_model():

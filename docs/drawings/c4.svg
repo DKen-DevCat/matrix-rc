@@ -96,8 +96,8 @@
 <text x="52" y="694.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">カムを回す力：トルク ≒ 力 × 半径の増え方（10mm ÷ 約5.2rad）＝ 20N × 1.9mm ≒ 0.04N·m。摩擦込みで 約0.08N·m。</text>
 <text x="52" y="712.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">　→ N20 の高減速モーター（1000:1 前後）で回せる見込み。1回転 約3〜4秒 ＝ ジャンプの「チャージ時間」になる。</text>
 <text x="52" y="730.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">跳躍の見積もり：上段の速さ √(2×0.1÷0.06) ≒ 1.8m/s → 下段を引っ張った後 約1.1m/s → 高さ 約6cm（損失を引くと 4〜5cm）。</text>
-<text x="52" y="748.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">前進も要る：3cm より高い滞空は 約0.16秒。ホイールベース 61mm を越えるには 約0.5m/s 必要（走行は 約0.25m/s）。</text>
-<text x="52" y="766.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">　→ ばね軸を前傾させて水平速度を作るか、走行モーターを 500rpm 級にする。試験は「助走付きで段差を越える」で行う。</text>
+<text x="52" y="748.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">前進も要る：滞空 約0.16秒で車体 91mm が段差を通り過ぎるには 0.5m/s 以上（概算 91÷0.16≒0.57m/s）→ 1000rpm 級 N20。</text>
+<text x="52" y="766.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">　→ 3.7V × デューティ 0.8 で 約0.67m/s、真上に跳ぶ。物理演算 10-28：300rpm は 0/10、1000rpm 級は 30〜50mm 手前で 8〜10/10。</text>
 <text x="52" y="784.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">ばねの寸法：0.5N/mm を線径 0.55mm で作ると約15巻き、密着高さ 約9mm。自由長 15mm では 10mm 縮まない → 自由長 25mm 以上。</text>
 <text x="52" y="802.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">※ 数値は計算上の目安。Phase 1-b2 の単体試作で、ばねの強さと縮め量を実測して決める。</text>
 <rect x="880" y="600" width="400" height="138.0" rx="6" fill="#fffbea" stroke="#e0b100" stroke-width="1.2" fill-opacity="1"/>

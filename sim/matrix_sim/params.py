@@ -14,17 +14,35 @@ class Motor:
     rated_v: float
     no_load_rpm: float
     stall_torque: float  # N·m（減速後の軸）
+    armature: float | None = None  # kg·m²。ロータの慣性 × 減速比²（減速後の軸に換算）。None なら無負荷回転数から推定
 
     def at(self, volts: float) -> tuple[float, float]:
         """電圧 volts での (無負荷の角速度 rad/s, 停動トルク N·m)。どちらも電圧に比例するとみなす。"""
         s = volts / self.rated_v
         return self.no_load_rpm * 2 * math.pi / 60 * s, self.stall_torque * s
 
+    @property
+    def reflected_inertia(self) -> float:
+        """減速後の軸から見たロータの慣性 kg·m²。N20 100:1（300rpm）を 2e-6 とし、減速比は回転数に反比例するとして推定。"""
+        if self.armature is not None:
+            return self.armature
+        return ARMATURE_100_1 * (300.0 / self.no_load_rpm) ** 2
+
+
+# N20 100:1 の、減速後の軸から見たロータの慣性（推定）
+ARMATURE_100_1 = 2e-6
+# 真上跳びで 30mm 段差を越えるのに要る前進の速さ m/s。概算は車体 91mm ÷ 30mm より高い滞空 0.16 秒 ≒ 0.57m/s だが、
+# 物理演算では 0.54m/s（800rpm 級）でも越えるので、設計書②・C4 の「0.5m/s 以上」を基準にする
+REQUIRED_RUN_SPEED = 0.5
+
 
 # 走行用 N20（6V 300rpm）。停動トルクは推定（汎用 N20 100:1 の公称値の目安）。
 N20_300RPM = Motor(rated_v=6.0, no_load_rpm=300, stall_torque=0.06)
 # 高速化案（設計書② 7章「500rpm 級」）。停動トルクはギア比に反比例として推定。
 N20_500RPM = Motor(rated_v=6.0, no_load_rpm=500, stall_torque=0.036)
+# 真上跳び＋前進で 30mm 段差を越えるのに要る速さ（0.5m/s 以上）のための候補。停動トルクは同じく推定。
+N20_800RPM = Motor(rated_v=6.0, no_load_rpm=800, stall_torque=0.0225)
+N20_1000RPM = Motor(rated_v=6.0, no_load_rpm=1000, stall_torque=0.018)
 # ジャンプ用の高減速 N20（1000:1 前後）。推定。
 N20_1000_1 = Motor(rated_v=6.0, no_load_rpm=30, stall_torque=0.30)
 
@@ -45,7 +63,7 @@ class Params:
     lower_width: float = 41.0
     lower_z: tuple[float, float] = (8.0, 20.0)    # 下段の下面・上面（地面から、伸びた状態）
     upper_x: tuple[float, float] = (1.0, 90.0)
-    upper_z: tuple[float, float] = (32.0, 46.0)   # 上段の下面・上面（伸びた状態。すき間 12mm）
+    upper_z: tuple[float, float] = (38.0, 52.0)   # 上段の下面・上面（伸びた状態。すき間 18mm。縮めきりで車輪上端 26mm に 2mm の余裕）
     wheel_radius: float = 13.0     # タイヤ φ26
     wheel_width: float = 6.0
     wheels: tuple[Wheel, ...] = (
@@ -64,16 +82,15 @@ class Params:
     spring_count: int = 4
     spring_rate: float = 0.5       # N/mm（1 本あたり）
     spring_free_length: float = 25.0
-    stroke: float = 10.0           # 縮める量 mm（すき間 12 → 2）
+    stroke: float = 10.0           # 縮める量 mm（すき間 18 → 8）
     tilt_deg: float = 0.0          # ばね軸（ガイドピン）の前傾角。0 が現行の図面
     cam_lift_angle: float = 5.2    # rad。揚程 10mm をこの角度で上げる（C4）
     cam_efficiency: float = 0.5    # 摩擦込みの効率（C4 の「摩擦込みで約 0.08N·m」に相当）
 
     # ---- 電気 ----
     battery_v: float = 3.7         # 1S リポの公称
-    drive_motor: Motor = N20_300RPM
+    drive_motor: Motor = N20_1000RPM  # 2026-10-28 に 300rpm から変更（真上跳びで段差を越えるには 0.5m/s 以上要る）
     jump_motor: Motor = N20_1000_1
-    drive_armature: float = 2e-6   # kg·m²。ロータの慣性 × 減速比²（推定。N20 100:1）
     throttle: float = 0.8          # ファームの速度上限 MAX_DUTY（firmware/src/main.cpp）
 
     # ---- 接触（推定。1-a の実測で合わせ込む）----
