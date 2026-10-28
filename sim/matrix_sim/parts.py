@@ -6,6 +6,8 @@
 - lower_*  下段に付くもの（下段の板、モーター、カム …）
 - wheel_rl / wheel_rr / wheel_fl / wheel_fr  車輪（後ろ左・後ろ右・前左・前右）。後ろ左が左モーター、後ろ右が右モーター
 - それ以外の名前は無視する（ねじなど。質量に効くものは upper_／lower_ を付ける）
+- parts.json の項目に "passes_through": true を付けた部品（ガイドピンなど）は、上段を貫く前提。質量と形は使うが、
+  上下段の干渉の確認と下段の外形（lower_z など）からは外す
 
 座標は「x が前、y が左、z が上、原点は車体の後端・中心線・地面」、ばねが伸びきった状態で組む（sim/fusion/README.md）。
 慣性は MuJoCo がメッシュの形と質量から計算する（部品ごとに密度一様、Fusion と同じ仮定）。
@@ -32,6 +34,7 @@ class Part:
     bbox_min: tuple[float, float, float]   # m
     bbox_max: tuple[float, float, float]   # m
     stl_scale: float          # STL の座標 × これ ＝ m
+    passes_through: bool = False  # 上段を貫く部品（ガイドピンなど）。干渉の確認と外形から外す
 
     @property
     def role(self) -> str:
@@ -82,7 +85,8 @@ def load_parts(folder: Path) -> list[Part]:
         v = read_stl_vertices(stl)
         bmin, bmax = np.array(e["bbox_min"]), np.array(e["bbox_max"])
         scale = infer_scale(v.max(0) - v.min(0), bmax - bmin)
-        parts.append(Part(e["name"], stl, e["mass"], tuple(e["com"]), tuple(bmin), tuple(bmax), scale))
+        parts.append(Part(e["name"], stl, e["mass"], tuple(e["com"]), tuple(bmin), tuple(bmax), scale,
+                          bool(e.get("passes_through", False))))
     return parts
 
 
@@ -94,6 +98,7 @@ def apply(base: Params, parts: list[Part]) -> Params:
         raise ValueError(f"部品が足りない：{missing}")
 
     def extent(ps, axis):
+        ps = [p for p in ps if not p.passes_through] or ps
         return (min(p.bbox_min[axis] for p in ps) * 1000, max(p.bbox_max[axis] for p in ps) * 1000)
 
     wheels, radius, width = [], 0.0, 0.0

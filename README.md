@@ -63,7 +63,7 @@ cd firmware && pio run -t upload && pio device monitor
 
 ## 物理演算による事前検証
 
-設計（3D は Autodesk Fusion）を作る前に、図面どおりに動くかを MuJoCo で確かめる。Phase 1-b1 までに整える方針（2026-10-28 決定）。詳しくは [sim/README.md](sim/README.md)、最新の結果は [docs/sim-report.md](docs/sim-report.md)。
+3D モデルは Blender でコードから組む（`sim/model/build_model.py`。部品ごとの寸法・質量・重心を出し、そのまま物理演算に読ませる。図は `docs/model/`）。Fusion は任意（書き出した STL を読み込める）。作る前に、図面どおりに動くかを MuJoCo で確かめる。Phase 1-b1 までに整える方針（2026-10-28 決定）。詳しくは [sim/README.md](sim/README.md)、最新の結果は [docs/sim-report.md](docs/sim-report.md)。
 
 ```sh
 cd sim && make setup && make test && make report

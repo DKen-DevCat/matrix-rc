@@ -118,7 +118,7 @@ def xml(p: Params, step_x: float | None = None) -> str:
     </body>
   </worldbody>
   <contact>
-    {"".join(f'<exclude body1="upper" body2="wheel{i}"/>' for i in range(len(p.wheels))) if checks.all_issues(p) else ""}
+    {"".join(f'<exclude body1="upper" body2="wheel{i}"/>' for i in range(len(p.wheels))) if checks.compressed_upper_vs_wheels(p) else ""}
   </contact>
   <actuator>
     {"".join(drive)}
