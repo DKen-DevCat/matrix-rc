@@ -1,0 +1,403 @@
+{
+  "source": "sim/model/build_model.py（Blender でコードから組んだモデル。寸法は params.py、質量は設計書② 4 章）",
+  "units": "kg, m",
+  "parts": [
+    {
+      "name": "upper_plate",
+      "stl": "upper_plate.stl",
+      "mass": 0.02,
+      "com": [
+        0.0455,
+        0.0,
+        0.039
+      ],
+      "bbox_min": [
+        0.001,
+        -0.0275,
+        0.038
+      ],
+      "bbox_max": [
+        0.09,
+        0.0275,
+        0.04
+      ],
+      "volume_mm3": 9790.0,
+      "density_g_cm3": 2.04
+    },
+    {
+      "name": "upper_battery",
+      "stl": "upper_battery.stl",
+      "mass": 0.017,
+      "com": [
+        0.026,
+        0.0,
+        0.035
+      ],
+      "bbox_min": [
+        0.001,
+        -0.016,
+        0.032
+      ],
+      "bbox_max": [
+        0.051,
+        0.016,
+        0.038
+      ],
+      "volume_mm3": 9600.0,
+      "density_g_cm3": 1.77
+    },
+    {
+      "name": "upper_xiao",
+      "stl": "upper_xiao.stl",
+      "mass": 0.005,
+      "com": [
+        0.07675,
+        -0.001,
+        0.044
+      ],
+      "bbox_min": [
+        0.068,
+        -0.0115,
+        0.04
+      ],
+      "bbox_max": [
+        0.0855,
+        0.0095,
+        0.048
+      ],
+      "volume_mm3": 2940.0,
+      "density_g_cm3": 1.7
+    },
+    {
+      "name": "upper_lte",
+      "stl": "upper_lte.stl",
+      "mass": 0.012,
+      "com": [
+        0.046,
+        -0.0005,
+        0.043
+      ],
+      "bbox_min": [
+        0.03,
+        -0.0165,
+        0.04
+      ],
+      "bbox_max": [
+        0.062,
+        0.0155,
+        0.046
+      ],
+      "volume_mm3": 6144.0,
+      "density_g_cm3": 1.95
+    },
+    {
+      "name": "upper_gps",
+      "stl": "upper_gps.stl",
+      "mass": 0.005,
+      "com": [
+        0.014,
+        0.0125,
+        0.043
+      ],
+      "bbox_min": [
+        0.004,
+        0.0025,
+        0.04
+      ],
+      "bbox_max": [
+        0.024,
+        0.0225,
+        0.046
+      ],
+      "volume_mm3": 2400.0,
+      "density_g_cm3": 2.08
+    },
+    {
+      "name": "upper_switch",
+      "stl": "upper_switch.stl",
+      "mass": 0.001,
+      "com": [
+        0.014,
+        -0.0055,
+        0.042
+      ],
+      "bbox_min": [
+        0.004,
+        -0.0085,
+        0.04
+      ],
+      "bbox_max": [
+        0.024,
+        -0.0025,
+        0.044
+      ],
+      "volume_mm3": 480.0,
+      "density_g_cm3": 2.08
+    },
+    {
+      "name": "upper_driver",
+      "stl": "upper_driver.stl",
+      "mass": 0.002,
+      "com": [
+        0.014,
+        -0.0175,
+        0.042
+      ],
+      "bbox_min": [
+        0.004,
+        -0.0225,
+        0.04
+      ],
+      "bbox_max": [
+        0.024,
+        -0.0125,
+        0.044
+      ],
+      "volume_mm3": 800.0,
+      "density_g_cm3": 2.5
+    },
+    {
+      "name": "lower_plate",
+      "stl": "lower_plate.stl",
+      "mass": 0.005,
+      "com": [
+        0.0455,
+        0.0,
+        0.019
+      ],
+      "bbox_min": [
+        0.003,
+        -0.0205,
+        0.018
+      ],
+      "bbox_max": [
+        0.088,
+        0.0205,
+        0.02
+      ],
+      "volume_mm3": 6970.0,
+      "density_g_cm3": 0.72
+    },
+    {
+      "name": "lower_motor_l",
+      "stl": "lower_motor_l.stl",
+      "mass": 0.01,
+      "com": [
+        0.015,
+        0.009,
+        0.013
+      ],
+      "bbox_min": [
+        0.009,
+        -0.0035,
+        0.008
+      ],
+      "bbox_max": [
+        0.021,
+        0.0215,
+        0.018
+      ],
+      "volume_mm3": 3000.0,
+      "density_g_cm3": 3.33
+    },
+    {
+      "name": "lower_motor_r",
+      "stl": "lower_motor_r.stl",
+      "mass": 0.01,
+      "com": [
+        0.029,
+        -0.009,
+        0.013
+      ],
+      "bbox_min": [
+        0.023,
+        -0.0215,
+        0.008
+      ],
+      "bbox_max": [
+        0.035,
+        0.0035,
+        0.018
+      ],
+      "volume_mm3": 3000.0,
+      "density_g_cm3": 3.33
+    },
+    {
+      "name": "lower_jump_motor",
+      "stl": "lower_jump_motor.stl",
+      "mass": 0.01,
+      "com": [
+        0.0525,
+        0.0,
+        0.013
+      ],
+      "bbox_min": [
+        0.04,
+        -0.006,
+        0.008
+      ],
+      "bbox_max": [
+        0.065,
+        0.006,
+        0.018
+      ],
+      "volume_mm3": 3000.0,
+      "density_g_cm3": 3.33
+    },
+    {
+      "name": "lower_cam",
+      "stl": "lower_cam.stl",
+      "mass": 0.002,
+      "com": [
+        0.06000005967333104,
+        -3.4728726386486685e-09,
+        0.021000027465208213
+      ],
+      "bbox_min": [
+        0.054,
+        -0.006,
+        0.02
+      ],
+      "bbox_max": [
+        0.066,
+        0.006,
+        0.022
+      ],
+      "volume_mm3": 225.5,
+      "density_g_cm3": 8.87
+    },
+    {
+      "name": "lower_axle_f",
+      "stl": "lower_axle_f.stl",
+      "mass": 0.001,
+      "com": [
+        0.07599998702731897,
+        1.7955845033270882e-09,
+        0.013000009911611281
+      ],
+      "bbox_min": [
+        0.0745,
+        -0.0215,
+        0.0115
+      ],
+      "bbox_max": [
+        0.0775,
+        0.0215,
+        0.0145
+      ],
+      "volume_mm3": 303.1,
+      "density_g_cm3": 3.3
+    },
+    {
+      "name": "lower_pins",
+      "stl": "lower_pins.stl",
+      "mass": 0.002,
+      "com": [
+        0.05199998975072479,
+        -2.0117647940104354e-08,
+        0.03199991897276433
+      ],
+      "bbox_min": [
+        0.035,
+        -0.0185,
+        0.02
+      ],
+      "bbox_max": [
+        0.069,
+        0.0185,
+        0.044
+      ],
+      "volume_mm3": 293.9,
+      "density_g_cm3": 6.81,
+      "passes_through": true
+    },
+    {
+      "name": "wheel_rl",
+      "stl": "wheel_rl.stl",
+      "mass": 0.002,
+      "com": [
+        0.01499999926564951,
+        0.02450000016617385,
+        0.01299999980462126
+      ],
+      "bbox_min": [
+        0.002,
+        0.0215,
+        0.0
+      ],
+      "bbox_max": [
+        0.028,
+        0.0275,
+        0.026
+      ],
+      "volume_mm3": 3176.5,
+      "density_g_cm3": 0.63
+    },
+    {
+      "name": "wheel_rr",
+      "stl": "wheel_rr.stl",
+      "mass": 0.002,
+      "com": [
+        0.028999996439505286,
+        -0.024499998254144423,
+        0.012999999242168608
+      ],
+      "bbox_min": [
+        0.016,
+        -0.0275,
+        0.0
+      ],
+      "bbox_max": [
+        0.042,
+        -0.0215,
+        0.026
+      ],
+      "volume_mm3": 3176.5,
+      "density_g_cm3": 0.63
+    },
+    {
+      "name": "wheel_fl",
+      "stl": "wheel_fl.stl",
+      "mass": 0.002,
+      "com": [
+        0.07599998017064194,
+        0.02449999370245601,
+        0.01300000145815783
+      ],
+      "bbox_min": [
+        0.063,
+        0.0215,
+        0.0
+      ],
+      "bbox_max": [
+        0.089,
+        0.0275,
+        0.026
+      ],
+      "volume_mm3": 3176.5,
+      "density_g_cm3": 0.63
+    },
+    {
+      "name": "wheel_fr",
+      "stl": "wheel_fr.stl",
+      "mass": 0.002,
+      "com": [
+        0.07599998653923055,
+        -0.02449999653313287,
+        0.013000003555533261
+      ],
+      "bbox_min": [
+        0.063,
+        -0.0275,
+        0.0
+      ],
+      "bbox_max": [
+        0.089,
+        -0.0215,
+        0.026
+      ],
+      "volume_mm3": 3176.5,
+      "density_g_cm3": 0.63
+    }
+  ]
+}

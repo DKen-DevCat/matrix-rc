@@ -1,6 +1,7 @@
 """段差越えをウィンドウで見る（macOS は mjpython で起動する：make view）。
 
-    mjpython -m matrix_sim.view --tilt 20 --motor 500rpm --trigger 25
+    mjpython -m matrix_sim.view --parts model/export --trigger 40        # 採用案（前傾 0°・1000rpm）
+    mjpython -m matrix_sim.view --tilt 20 --motor 500rpm --trigger 25    # 比較用
 """
 import argparse
 from pathlib import Path
@@ -12,16 +13,17 @@ import mujoco.viewer
 from . import calibrate, parts, scenarios
 from .build import front_x
 from .params import DESIGN
-from .sweep import MOTORS
+from .sweep import MOTORS, adopted_option
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--tilt", type=float, default=20)
-    ap.add_argument("--motor", choices=list(MOTORS), default="500rpm")
-    ap.add_argument("--trigger", type=float, default=25, help="発射する段差までの距離 mm")
+    adopted = adopted_option(DESIGN)
+    ap.add_argument("--tilt", type=float, default=adopted.tilt_deg)
+    ap.add_argument("--motor", choices=list(MOTORS), default=adopted.motor)
+    ap.add_argument("--trigger", type=float, default=40, help="発射する段差までの距離 mm")
     ap.add_argument("--slow", type=float, default=4, help="スロー再生の倍率")
-    ap.add_argument("--parts", type=Path, help="Fusion から書き出したフォルダ")
+    ap.add_argument("--parts", type=Path, help="部品モデルのフォルダ（make model が作る model/export など）")
     ap.add_argument("--measured", action="store_true", help="sim/calibration/*.csv の実測値を使う")
     a = ap.parse_args()
 

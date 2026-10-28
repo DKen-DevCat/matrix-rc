@@ -54,6 +54,12 @@ def test_adopted_option_follows_measured_motor():
     assert o.params(DESIGN.with_(drive_motor=measured)).drive_motor is measured
 
 
+def test_reflected_inertia_uses_6v_equivalent_rpm():
+    # 実測のモーターは電池電圧が定格になる。3.7V で 617rpm の 1000rpm 級は、6V 定格の 1000rpm と同じ慣性
+    measured = N20_1000RPM.__class__(rated_v=3.7, no_load_rpm=1000 * 3.7 / 6.0, stall_torque=0.011)
+    assert measured.reflected_inertia == pytest.approx(N20_1000RPM.reflected_inertia, rel=1e-6)
+
+
 def test_reflected_inertia_scales_with_gear_ratio():
     # 1000rpm 級は 300rpm（100:1）より減速比が小さいので、車輪から見たロータの慣性も小さい
     assert N20_1000RPM.reflected_inertia < N20_500RPM.reflected_inertia < N20_300RPM.reflected_inertia
@@ -100,11 +106,12 @@ def test_c4_drawing_states_adopted_drive_motor():
 
 
 def test_committed_report_matches_params():
-    # 既定（箱と円柱・推定値）で作ったレポートなら、採用案の行の速さと干渉の結果が params と一致すること。
-    # --measured や --parts で作り直したレポートは前提が違うので、ここでは見ない
+    # 既定（3D モデル、または箱と円柱・推定値）で作ったレポートなら、採用案の行の速さと干渉の結果が params と一致すること。
+    # --measured で作り直したレポートは前提が違うので、ここでは見ない
     text = REPORT.read_text()
-    if "実測で置き換えた値：なし" not in text or "箱と円柱の近似" not in text:
-        pytest.skip("レポートが実測値か Fusion の形で作られている")
+    if "実測で置き換えた値：なし" not in text:
+        pytest.skip("レポートが実測値で作られている")
+    assert "部品モデル（model/export）" in text or "箱と円柱の近似" in text, "レポートの形状が既定（make report / report-box）でない"
     assert "- なし" in text.split("## 2.")[0], "干渉の結果が params と違う（make report を実行し直す）"
     o = adopted_option(DESIGN)
     row = re.search(rf"^\| {re.escape(o.label)} \| ([\d.]+)m/s \|", text, re.M)
