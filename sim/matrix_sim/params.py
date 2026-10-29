@@ -63,30 +63,33 @@ class Params:
     # ---- 車体（C3）----
     length: float = 91.0           # 名刺の長辺
     width: float = 55.0
-    lower_x: tuple[float, float] = (3.0, 88.0)    # 下段の前後の範囲
-    lower_width: float = 41.0
-    lower_z: tuple[float, float] = (8.0, 20.0)    # 下段の下面・上面（地面から、伸びた状態）
+    lower_x: tuple[float, float] = (1.0, 90.0)    # 下段の前後の範囲（四隅のばねの座が板に載るよう、上段と同じ長さ。2026-10-29）
+    lower_width: float = 39.0     # 車輪の内側の面（|y| 20.5）から 1mm 離す（2026-10-29）
+    lower_z: tuple[float, float] = (11.0, 23.0)   # 下段の下面・上面（地面から、伸びた状態）。走行モーター（N20、高さ 10）の軸を車輪の中心 16mm に合わせ、その上に板（厚さ 2）
     upper_x: tuple[float, float] = (1.0, 90.0)
-    upper_z: tuple[float, float] = (38.0, 52.0)   # 上段の下面・上面（伸びた状態。すき間 18mm。縮めきりで車輪上端 26mm に 2mm の余裕）
-    wheel_radius: float = 13.0     # タイヤ φ26
-    wheel_width: float = 6.0
+    upper_z: tuple[float, float] = (44.0, 58.0)   # 上段の板の下面・上面（伸びた状態。すき間 21mm）。縮めきると下面 34mm で車輪上端 32mm に 2mm の余裕（2026-10-29、φ32 に合わせて 6mm 上げた）
+    wheel_radius: float = 16.0     # タイヤ φ32（Pololu 1087/1088 32×7mm、2026-10-29 に φ26 から変更）
+    wheel_width: float = 7.0
     wheels: tuple[Wheel, ...] = (
-        Wheel(15.0, 24.5, "left"),   # 左後輪（左モーター）
-        Wheel(29.0, -24.5, "right"),  # 右後輪（右モーター。前後にずらして置く）
-        Wheel(76.0, 24.5, None),     # 前輪は自由回転
-        Wheel(76.0, -24.5, None),
+        Wheel(16.0, 24.0, "left"),   # 左後輪（左モーター）。外側の面が車体の幅 55 に揃う
+        Wheel(30.0, -24.0, "right"),  # 右後輪（右モーター。前後にずらして置く）
+        Wheel(75.0, 24.0, None),     # 前輪は自由回転。前の端が車体の前端 91 に揃う
+        Wheel(75.0, -24.0, None),
     )
+    # ばね（＝ガイドピン）の位置 (x, y) mm と、ばねの外径。電池（幅 34.5）を板の裏に置くので四隅に寄せる（2026-10-29）
+    springs: tuple[tuple[float, float], ...] = ((6.0, 15.5), (6.0, -15.5), (86.0, 15.5), (86.0, -15.5))   # 外径 7 が両方の板（x 1〜90、下段は幅 39）に収まる
+    spring_od: float = 7.0
 
-    # ---- 質量（設計書② 4章）----
-    upper_mass: float = 60.0       # 上段の小計 55〜65g
-    lower_mass: float = 45.0       # 下段の小計（車輪を含む）
-    wheel_mass: float = 2.0        # 1 輪あたり（推定）
+    # ---- 質量（設計書② 4章。部品ごとの内訳は sim/model/build_model.py の PARTS 表）----
+    upper_mass: float = 68.0       # 上段の小計（電池 LP603449-PCM-LD 23g を含む）
+    lower_mass: float = 59.0       # 下段の小計（車輪 4 輪 12.8g を含む）
+    wheel_mass: float = 3.2        # 1 輪あたり（Pololu の公称）
 
     # ---- ジャンプ（設計書② 7章・C4）----
     spring_count: int = 4
     spring_rate: float = 0.5       # N/mm（1 本あたり）
     spring_free_length: float = 25.0
-    stroke: float = 10.0           # 縮める量 mm（すき間 18 → 8）
+    stroke: float = 10.0           # 縮める量 mm（すき間 21 → 11）
     tilt_deg: float = 0.0          # ばね軸（ガイドピン）の前傾角。0 が現行の図面
     cam_lift_angle: float = 5.2    # rad。揚程 10mm をこの角度で上げる（C4）
     cam_efficiency: float = 0.5    # 摩擦込みの効率（C4 の「摩擦込みで約 0.08N·m」に相当）

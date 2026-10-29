@@ -90,14 +90,14 @@
 <text x="1055" y="555" font-size="11" text-anchor="middle" font-weight="normal" fill="#6b7280">段差を越えるとフォロワーが外れ、ばねが一気に伸びる</text>
 <rect x="40" y="600" width="820" height="210.0" rx="6" fill="#fffbea" stroke="#e0b100" stroke-width="1.2" fill-opacity="1"/>
 <text x="52" y="620" font-size="13" text-anchor="start" font-weight="bold" fill="#1f2933">設計計算</text>
-<text x="52" y="640.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">目標：3cm の段差を越える → 跳躍高さ 4cm 以上（余裕込み）。機体の重さ m＝約100g（上段 約60g・下段 約40g）。</text>
-<text x="52" y="658.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">必要なエネルギー：m·g·h ＝ 0.1 × 9.8 × 0.04 ≒ 0.04J。上段が下段を引っ張る時の損失（約4割）と余裕を見て、ばねに 約0.1J を蓄える。</text>
+<text x="52" y="640.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">目標：3cm の段差を越える → 跳躍高さ 4cm 以上（余裕込み）。機体の重さ m＝約127g（上段 約68g・下段 約59g。10-29 に型番で見直し）。</text>
+<text x="52" y="658.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">必要なエネルギー：m·g·h ＝ 0.127 × 9.8 × 0.04 ≒ 0.05J。上段が下段を引っ張る時の損失（約5割）があり、ばねの 0.1J では余裕が少ない。</text>
 <text x="52" y="676.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">ばね：4本 × ばね定数 約0.5N/mm × 縮め量 10mm → 蓄えるエネルギー ＝ 4 × ½ × 500 × 0.01² ＝ 0.1J。縮めきった時の力は合計 約20N。</text>
 <text x="52" y="694.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">カムを回す力：トルク ≒ 力 × 半径の増え方（10mm ÷ 約5.2rad）＝ 20N × 1.9mm ≒ 0.04N·m。摩擦込みで 約0.08N·m。</text>
 <text x="52" y="712.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">　→ N20 の高減速モーター（1000:1 前後）で回せる見込み。1回転 約3〜4秒 ＝ ジャンプの「チャージ時間」になる。</text>
-<text x="52" y="730.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">跳躍の見積もり：上段の速さ √(2×0.1÷0.06) ≒ 1.8m/s → 下段を引っ張った後 約1.1m/s → 高さ 約6cm（損失を引くと 4〜5cm）。</text>
+<text x="52" y="730.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">跳躍の見積もり：上段の速さ √(2×0.1÷0.068) ≒ 1.7m/s → 下段を引っ張った後 約0.92m/s → 高さ 約4.3cm（物理演算では 3.7cm）。</text>
 <text x="52" y="748.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">前進も要る：滞空 約0.16秒で車体 91mm が段差を通り過ぎるには 0.5m/s 以上（概算 91÷0.16≒0.57m/s）→ 1000rpm 級 N20。</text>
-<text x="52" y="766.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">　→ 3.7V × デューティ 0.8 で 約0.67m/s、真上に跳ぶ。物理演算 10-28：300rpm は 0/10、1000rpm 級は 30〜50mm 手前で 8〜10/10。</text>
+<text x="52" y="766.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">　→ φ32 で 3.7V × デューティ 0.8 で 約0.83m/s、真上に跳ぶ。物理演算 10-29（127g）：跳躍 37mm、40mm 手前の 1 点だけ 8/10（要対策）。</text>
 <text x="52" y="784.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">ばねの寸法：0.5N/mm を線径 0.55mm で作ると約15巻き、密着高さ 約9mm。自由長 15mm では 10mm 縮まない → 自由長 25mm 以上。</text>
 <text x="52" y="802.0" font-size="12" text-anchor="start" font-weight="normal" fill="#374151">※ 数値は計算上の目安。Phase 1-b2 の単体試作で、ばねの強さと縮め量を実測して決める。</text>
 <rect x="880" y="600" width="400" height="138.0" rx="6" fill="#fffbea" stroke="#e0b100" stroke-width="1.2" fill-opacity="1"/>

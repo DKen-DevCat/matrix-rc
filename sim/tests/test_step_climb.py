@@ -23,9 +23,12 @@ def test_current_design_fails_when_fired_at_the_step_face():
 
 
 def test_current_design_clears_step_with_variation():
-    # 採用案（前傾 0°・1000rpm 級、0.67m/s）：35〜45mm 手前で発射すれば 10 回中 8 回以上
-    [w] = evaluate(DESIGN, [Option(0, "1000rpm")], [35, 45])
-    assert w.rates[35] >= PASS and w.rates[45] >= PASS
+    # 採用案（前傾 0°・1000rpm 級、φ32 で 0.83m/s）を箱と円柱の近似（params の寸法と質量、127g）で見ると、
+    # 40〜45mm 手前だけ 10 回中 8 回以上で、35mm は 7 回。部品モデルでは 40mm の 1 点だけ
+    # （test_model.test_detailed_model_barely_clears_the_step）。レポートは部品モデルが正。対策を入れたら書き換える
+    [w] = evaluate(DESIGN, [Option(0, "1000rpm")], [35, 40, 45])
+    assert w.rates[40] >= PASS and w.rates[45] >= PASS
+    assert w.rates[35] < PASS
 
 
 def test_firing_at_the_step_face_fails():
@@ -35,11 +38,8 @@ def test_firing_at_the_step_face_fails():
     assert r.outcome in ("blocked", "flipped")
 
 
-def test_tilt_20_with_500rpm_passes_with_variation():
+def test_tilt_options_no_longer_pass():
+    # 見つかったこと（2026-10-29）：φ32・127g にすると、前傾 20° の案は 300／500rpm とも合格しなくなった
+    # （φ26・105g では 15〜25mm 手前で 10 回中 8 回以上だった）。採用案（前傾 0°・1000rpm）は合格のまま
     [w] = evaluate(DESIGN, [Option(20, "500rpm")], [25])
-    assert w.rates[25] >= PASS
-
-
-def test_tilt_20_with_300rpm_passes_with_variation():
-    [w] = evaluate(DESIGN, [Option(20, "300rpm")], [15])
-    assert w.rates[15] >= PASS
+    assert w.rates[25] < PASS

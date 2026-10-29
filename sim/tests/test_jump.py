@@ -3,10 +3,11 @@ from matrix_sim import scenarios
 from matrix_sim.params import DESIGN, N20_300RPM
 
 
-def test_design_jumps_at_least_40mm():
-    # C4 の目標：跳躍高さ 4cm 以上（見積もり 4〜6cm）
+def test_design_jumps_and_lands_upright():
+    # C4 の目標は 4cm 以上（見積もり 4〜6cm）。2026-10-29 に部品を型番どおりにして 127g になり 37mm 前後に下がった
+    # （目標との差は test_design_decisions.test_heavier_build_jumps_lower_than_c4_target に固定）
     r = scenarios.jump_in_place(DESIGN)
-    assert 40 <= r.lift_mm <= 60
+    assert 30 <= r.lift_mm <= 60
     assert r.upright > 0.95
 
 
@@ -24,7 +25,7 @@ def test_tilt_up_to_15_degrees_lands_upright():
 def test_tilt_25_degrees_and_more_tips_over():
     # 見つかったこと：上段を 6mm 上げた（2026-10-28）ことで重心が上がり、前傾 20° のその場ジャンプは境目になった
     # （走行モーターの電気ブレーキの強さで、300rpm だと鼻から落ち、1000rpm だと立つ。境目なので固定せず、レポート 3 章に注記する）。
-    # 25° 以上は走行モーターによらずひっくり返る
+    # 25° 以上は走行モーターによらずひっくり返る（箱と円柱の近似で見た結果。部品モデルは 25° でも立つ：docs/sim-report.md の 3 章）
     for m in (N20_300RPM, DESIGN.drive_motor):
         assert scenarios.jump_in_place(DESIGN.with_(tilt_deg=25, drive_motor=m)).upright < 0.5
         assert scenarios.jump_in_place(DESIGN.with_(tilt_deg=30, drive_motor=m)).upright < 0
@@ -55,10 +56,12 @@ def _lift_extremes(p, run):
 
 
 def test_stops_hold_the_stroke_on_jump_and_drop():
-    # ストッパーは硬い：伸びきり・縮めきりを 1.5mm 以上越えない（O リングのつぶれ程度。越えると上段が下段にめり込む）
+    # ストッパーは硬い：伸びきり・縮めきりを 2mm 以上越えない（O リングのつぶれ程度）。
+    # 2026-10-29 に上段が 60→68g になり、30cm 落下で縮めきりを 1.6mm 越えるようになった（それまでは 1.5mm 以内）。
+    # 越えても電池の下面はカムの上面から 0.7mm 以上離れている
     for run in ("jump", "drop"):
         lo, hi = _lift_extremes(DESIGN, run)
-        assert lo > -DESIGN.stroke - 1.5, (run, lo)
+        assert lo > -DESIGN.stroke - 2.0, (run, lo)
         assert hi < 1.5, (run, hi)
 
 
