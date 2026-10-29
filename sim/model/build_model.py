@@ -18,7 +18,7 @@ import bpy
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
-from matrix_sim.params import DESIGN  # noqa: E402
+from matrix_sim.params import DESIGN, N20_LENGTH, POLOLU_136_LENGTH  # noqa: E402
 
 P = DESIGN
 MM = 1.0  # Blender の 1 単位を 1mm として組む（STL は mm、parts.json は m）
@@ -36,9 +36,12 @@ R, WW = P.wheel_radius, P.wheel_width
 AXLE_Z = R                 # 車軸の高さ（車輪の中心）
 TOP = UZ0 + PLATE          # 上段の板の上面
 
-# N20 ギアモーター：断面 12（幅）×10（高さ）、缶 15mm＋ギアボックス 9mm、3mm の D 軸。合計 約 10g（缶 6.5g、ギア 3.5g、推定）
-N20_W, N20_H, N20_CAN, N20_GEAR = 12.0, 10.0, 15.0, 9.0
-MZ = (AXLE_Z - N20_H / 2, AXLE_Z + N20_H / 2)          # 走行モーターの高さ（軸を車輪の中心に合わせる）
+# N20 ギアモーター（ジャンプ用）：断面 12（幅）×10（高さ）、缶 15mm＋ギアボックス 9mm、3mm の D 軸。合計 約 10g（缶 6.5g、ギア 3.5g、推定）
+N20_W, N20_H, N20_CAN = 12.0, 10.0, 15.0
+N20_GEAR = N20_LENGTH - N20_CAN
+# 走行モーター：Pololu 136:1 6mm 遊星（#2358）。φ6、モーター 9.3mm＋ギアボックス 9.7mm＝19mm、1.25g（メーカー値。缶 0.8g・ギア 0.45g に配分は推定）
+PL_R, PL_CAN = 3.0, 9.3
+PL_GEAR = POLOLU_136_LENGTH - PL_CAN
 L_IN = REAR_L.y - WW / 2                               # 左後輪の内側の面
 R_IN = REAR_R.y + WW / 2                               # 右後輪の内側の面（負）
 
@@ -58,10 +61,11 @@ PARTS = [
     ("upper_driver",  ("box", (9.5, 29.5), (-23.5, -12.5), (TOP, TOP + 4.0)), 2.0, C_BOARD, "DRV8833＋MOSFET：2g（推定。1-b は小型のモジュール）"),
     # ---- 下段
     ("lower_plate",   ("box", (P.lower_x[0], P.lower_x[1]), (-P.lower_width / 2, P.lower_width / 2), (LZ1 - PLATE, LZ1)), 8.0, C_PLATE_L, "樹脂の板 85×41×2mm、密度 1.2 として 約 8g"),
-    ("lower_motor_l_can",  ("box", (REAR_L.x - N20_W / 2, REAR_L.x + N20_W / 2), (L_IN - 0.5 - N20_GEAR - N20_CAN, L_IN - 0.5 - N20_GEAR), MZ), 6.5, C_MOTOR, "N20 1000rpm 級（左）の缶：推定"),
-    ("lower_motor_l_gear", ("box", (REAR_L.x - N20_W / 2, REAR_L.x + N20_W / 2), (L_IN - 0.5 - N20_GEAR, L_IN - 0.5), MZ), 3.5, C_METAL, "N20（左）のギアボックス：推定"),
-    ("lower_motor_r_can",  ("box", (REAR_R.x - N20_W / 2, REAR_R.x + N20_W / 2), (R_IN + 0.5 + N20_GEAR, R_IN + 0.5 + N20_GEAR + N20_CAN), MZ), 6.5, C_MOTOR, "N20 1000rpm 級（右）の缶：推定"),
-    ("lower_motor_r_gear", ("box", (REAR_R.x - N20_W / 2, REAR_R.x + N20_W / 2), (R_IN + 0.5, R_IN + 0.5 + N20_GEAR), MZ), 3.5, C_METAL, "N20（右）のギアボックス：推定"),
+    # 走行モーターは左右を一直線に並べる（2 個で 38mm、車輪の内側の間 41mm に収まる）。ギアボックス側を車輪に向ける
+    ("lower_motor_l_can",  ("cyl_y", REAR_L.x, (L_IN - 0.5 - PL_GEAR - PL_CAN, L_IN - 0.5 - PL_GEAR), AXLE_Z, PL_R), 0.8, C_MOTOR, "Pololu 136:1（左）のモーター部：1.25g のうち推定 0.8g"),
+    ("lower_motor_l_gear", ("cyl_y", REAR_L.x, (L_IN - 0.5 - PL_GEAR, L_IN - 0.5), AXLE_Z, PL_R), 0.45, C_METAL, "Pololu 136:1（左）のギアボックス：推定 0.45g"),
+    ("lower_motor_r_can",  ("cyl_y", REAR_R.x, (R_IN + 0.5 + PL_GEAR, R_IN + 0.5 + PL_GEAR + PL_CAN), AXLE_Z, PL_R), 0.8, C_MOTOR, "Pololu 136:1（右）のモーター部：推定 0.8g"),
+    ("lower_motor_r_gear", ("cyl_y", REAR_R.x, (R_IN + 0.5, R_IN + 0.5 + PL_GEAR), AXLE_Z, PL_R), 0.45, C_METAL, "Pololu 136:1（右）のギアボックス：推定 0.45g"),
     ("lower_jump_can",  ("box", (40.0, 40.0 + N20_CAN), (-N20_W / 2, N20_W / 2), (LZ1 - PLATE - N20_H, LZ1 - PLATE)), 6.5, C_MOTOR, "ジャンプ用 N20（高減速）の缶：推定"),
     ("lower_jump_gear", ("box", (40.0 + N20_CAN, 40.0 + N20_CAN + N20_GEAR), (-N20_W / 2, N20_W / 2), (LZ1 - PLATE - N20_H, LZ1 - PLATE)), 3.5, C_METAL, "ジャンプ用 N20 のギアボックス：推定"),
     ("lower_cam",     ("cyl_z", 60.0, 0.0, (LZ1, LZ1 + 2.0), 6.0), 2.0, C_CAM, "カム：仮の形と位置（C4 で未確定）"),

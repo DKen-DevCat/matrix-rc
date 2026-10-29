@@ -125,6 +125,9 @@ class StepResult:
 RUN_UP = 0.12  # 段差の手前、車体の前端までの助走 m
 
 
+last_vehicle = None
+
+
 def step_climb(p: Params, trigger_mm: float, settle: float = 1.2) -> StepResult:
     """車体の前端が段差まで trigger_mm になった瞬間に発射する。発射後も前進し続ける。"""
     front0 = front_x(p) / 1000
@@ -157,6 +160,8 @@ def step_climb(p: Params, trigger_mm: float, settle: float = 1.2) -> StepResult:
         outcome = "front_only"
     else:
         outcome = "blocked"
+    global last_vehicle
+    last_vehicle = v   # テストで越えたあとの姿勢を見るため
     return StepResult(outcome == "cleared", outcome, best * 1000, spd, gap * 1000)
 
 

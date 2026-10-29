@@ -22,8 +22,9 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT_MD = ROOT / "docs" / "sim-report.md"
 OUT_DIR = ROOT / "docs" / "sim"
 
-# 採用案は前傾 0°・1000rpm（2026-10-28）。前傾 0° は走行モーター 4 種、前傾案は 300／500rpm で比較する
-OPTIONS = [Option(0, m) for m in ("300rpm", "500rpm", "800rpm", "1000rpm")] + [Option(t, m) for t in (10, 15, 20) for m in ("300rpm", "500rpm")]
+# 採用案は前傾 0°・Pololu 136:1（2026-10-29）。比較に N20（300／500／1000rpm）と、前傾案（300／500rpm）を並べる。
+# N20 の行は今の車輪の位置（左右を揃えた形）で回すので、前後にずらしていたときの結果とは違う
+OPTIONS = [Option(0, m) for m in ("Pololu136", "300rpm", "500rpm", "1000rpm")] + [Option(t, m) for t in (10, 20) for m in ("300rpm", "500rpm")]
 TRIGGERS = list(range(0, 61, 5))
 
 

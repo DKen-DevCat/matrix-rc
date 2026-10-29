@@ -28,7 +28,12 @@ constexpr int PIN_CAM_SW = 8;   // D9  カム位置スイッチ（押される�
 constexpr int PIN_LED = 9;      // D10 WS2812B（330Ω 直列）
 
 // ---- 調整値 ----
-constexpr float MAX_DUTY = 0.8f;          // 速度の上限
+// 速度の上限。1-a（N20 300rpm）は 0.8。1-b の走行モーター（Pololu 136:1 6mm 遊星、6V 定格）は 1S の電池で回すので
+// 1.0 にする（platformio.ini の env:xiao_1b が -DMATRIX_MAX_DUTY=1.0f を渡す。設計書② 2章）
+#ifndef MATRIX_MAX_DUTY
+#define MATRIX_MAX_DUTY 0.8f
+#endif
+constexpr float MAX_DUTY = MATRIX_MAX_DUTY;
 constexpr int PWM_FREQ = 20000;           // 可聴域の外にしてモーターのうなりを減らす
 constexpr int PWM_BITS = 10;
 // LEDC のチャンネル 0 はカメラの XCLK が使う（タイマー 0）。モーターは 2〜5（タイマー 1・2）を使う。
