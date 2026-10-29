@@ -80,9 +80,12 @@ def xml(p: Params, step_x: float | None = None) -> str:
     drive = []
     for i, w in enumerate(p.wheels):
         if w.driven:
-            # 直線モデル τ = Ts·u − (Ts/ω0)·ω を MuJoCo の中で解く（逆起電力の項を陰的に扱えるので安定）。u はデューティ
+            # 直線モデル τ = u·(Ts − (Ts/ω0)·ω)。u はデューティ。ファームは DRV8833 を「IN1 に PWM・IN2 は LOW」で回し、
+            # 0 では両方 LOW の惰性停止なので、逆起電力のブレーキもデューティに比例させる（u=0 で空転）。2026-10-29 に、
+            # 端子を短絡したブレーキ（u=0 でも −(Ts/ω0)·ω）として扱っていたのをファームの動きに合わせて直した
+            lim = min(ts, p.drive_motor.torque_limit) if p.drive_motor.torque_limit else ts
             drive.append(f'<general name="drive_{w.driven}" joint="wheel{i}" ctrlrange="-1 1" '
-                         f'gainprm="{ts:.6g}" biastype="affine" biasprm="0 0 {-ts / w0:.6g}" forcerange="{-ts:.6g} {ts:.6g}"/>')
+                         f'gaintype="affine" gainprm="{ts:.6g} 0 {-ts / w0:.6g}" forcerange="{-lim:.6g} {lim:.6g}"/>')
 
     lower_geoms, upper_geoms, assets = _deck_geoms(p, chassis_mass)
 
@@ -111,7 +114,7 @@ def xml(p: Params, step_x: float | None = None) -> str:
       {"".join(wheels)}
       <body name="upper" pos="0 0 0">
         <joint name="lift" type="slide" axis="{axis}" range="{-_mm(p.stroke)} 0"
-               stiffness="{p.spring_k}" springref="0" damping="0.05" solreflimit="{p.stop_timeconst} 1"/>
+               stiffness="{p.spring_k}" springref="0" damping="{p.spring_damping}" solreflimit="{p.stop_timeconst} 1"/>
         {upper_geoms}
         <site name="imu" pos="{_v(_mm(ux0 + ux1) / 2, 0, _mm(uz0 + uz1) / 2)}"/>
       </body>

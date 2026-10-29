@@ -15,6 +15,7 @@ class Motor:
     no_load_rpm: float
     stall_torque: float  # N·m（減速後の軸）
     armature: float | None = None  # kg·m²。ロータの慣性 × 減速比²（減速後の軸に換算）。None なら無負荷回転数から推定
+    torque_limit: float | None = None  # N·m。ギアボックスが受けられる瞬間トルクの上限（停動トルクより小さいとき）
 
     def at(self, volts: float) -> tuple[float, float]:
         """電圧 volts での (無負荷の角速度 rad/s, 停動トルク N·m)。どちらも電圧に比例するとみなす。"""
@@ -47,6 +48,15 @@ N20_500RPM = Motor(rated_v=6.0, no_load_rpm=500, stall_torque=0.036)
 # 真上跳び＋前進で 30mm 段差を越えるのに要る速さ（0.5m/s 以上）のための候補。停動トルクは同じく推定。
 N20_800RPM = Motor(rated_v=6.0, no_load_rpm=800, stall_torque=0.0225)
 N20_1000RPM = Motor(rated_v=6.0, no_load_rpm=1000, stall_torque=0.018)
+# Pololu 136:1 Sub-Micro Plastic Planetary Gearmotor 6Dx19L（#2358）：6V で無負荷 500rpm、停動 8oz·in（0.0565N·m）、1.25g（メーカー値）。
+# 長さ 19mm なので左右 2 個を一直線に並べられる（2026-10-29 採用）。ギアは樹脂で、瞬間トルクの推奨上限は 3.5oz·in 程度（同シリーズの値）
+N20_LENGTH = 24.0      # N20 の長さ（缶 15＋ギアボックス 9）mm
+POLOLU_136_LENGTH = 19.0   # Pololu 136:1 の長さ（モーター 9.3＋ギアボックス 9.7）mm
+POLOLU_136 = Motor(rated_v=6.0, no_load_rpm=500, stall_torque=0.0565,
+                   # ロータは N20 の半分の径で慣性はおよそ 1/16、減速比 136:1 を掛けて 2.3e-7（推定）
+                   armature=2.3e-7,
+                   # 樹脂ギアの瞬間トルクの推奨上限 3.5oz·in（Pololu が同シリーズの 700:1 に書く値。136:1 も同じとみなす：推定）
+                   torque_limit=0.0247)
 # ジャンプ用の高減速 N20（1000:1 前後）。推定。
 N20_1000_1 = Motor(rated_v=6.0, no_load_rpm=30, stall_torque=0.30)
 
@@ -71,8 +81,8 @@ class Params:
     wheel_radius: float = 16.0     # タイヤ φ32（Pololu 1087/1088 32×7mm、2026-10-29 に φ26 から変更）
     wheel_width: float = 7.0
     wheels: tuple[Wheel, ...] = (
-        Wheel(16.0, 24.0, "left"),   # 左後輪（左モーター）。外側の面が車体の幅 55 に揃う
-        Wheel(30.0, -24.0, "right"),  # 右後輪（右モーター。前後にずらして置く）
+        Wheel(23.0, 24.0, "left"),   # 左後輪（左モーター）。外側の面が車体の幅 55 に揃う
+        Wheel(23.0, -24.0, "right"),  # 右後輪（右モーター）。左右を同じ位置に揃える（2026-10-29。前後にずらすと段差の角に当たる時刻がずれ、向きが変わる）
         Wheel(75.0, 24.0, None),     # 前輪は自由回転。前の端が車体の前端 91 に揃う
         Wheel(75.0, -24.0, None),
     )
@@ -82,7 +92,7 @@ class Params:
 
     # ---- 質量（設計書② 4章。部品ごとの内訳は sim/model/build_model.py の PARTS 表）----
     upper_mass: float = 68.0       # 上段の小計（電池 LP603449-PCM-LD 23g を含む）
-    lower_mass: float = 59.0       # 下段の小計（車輪 4 輪 12.8g を含む）
+    lower_mass: float = 41.5       # 下段の小計（車輪 4 輪 12.8g を含む。走行モーターを 1.25g の 6mm 遊星にした）
     wheel_mass: float = 3.2        # 1 輪あたり（Pololu の公称）
 
     # ---- ジャンプ（設計書② 7章・C4）----
@@ -96,14 +106,15 @@ class Params:
 
     # ---- 電気 ----
     battery_v: float = 3.7         # 1S リポの公称
-    drive_motor: Motor = N20_1000RPM  # 2026-10-28 に 300rpm から変更（真上跳びで段差を越えるには 0.5m/s 以上要る）
+    drive_motor: Motor = POLOLU_136  # 2026-10-29 に N20 1000rpm から変更（左右を一直線に並べ、後輪の前後のずれをなくす）
     jump_motor: Motor = N20_1000_1
-    throttle: float = 0.8          # ファームの速度上限 MAX_DUTY（firmware/src/main.cpp）
+    throttle: float = 1.0          # ファームの速度上限 MAX_DUTY（1-b は env:xiao_1b で 1.0。firmware/src/main.cpp）
 
     # ---- 接触（推定。1-a の実測で合わせ込む）----
     floor_friction: float = 0.8
     contact_timeconst: float = 0.004  # s。小さいほど硬い接触
     stop_timeconst: float = 0.002  # s。上下段のストッパー（M2 ねじの頭＋O リング）の硬さ（推定）
+    spring_damping: float = 0.05   # N·s/m。上下段の間の減衰（ばね 4 本の内部摩擦。推定。ほぼ減衰なし）
     step_height: float = 30.0      # 越えたい段差
 
     # ---- 計算 ----

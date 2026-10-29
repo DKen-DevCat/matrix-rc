@@ -8,10 +8,11 @@ from dataclasses import dataclass
 import math
 import random
 
-from .params import N20_300RPM, N20_500RPM, N20_800RPM, N20_1000RPM, Motor, Params
+from .params import N20_300RPM, N20_500RPM, N20_800RPM, N20_1000RPM, POLOLU_136, Motor, Params
 from . import scenarios
 
-MOTORS = {"300rpm": N20_300RPM, "500rpm": N20_500RPM, "800rpm": N20_800RPM, "1000rpm": N20_1000RPM}
+MOTORS = {"Pololu136": POLOLU_136, "300rpm": N20_300RPM, "500rpm": N20_500RPM, "800rpm": N20_800RPM, "1000rpm": N20_1000RPM}
+THROTTLE = {"Pololu136": 1.0, "300rpm": 0.8, "500rpm": 0.8, "800rpm": 0.8, "1000rpm": 0.8}
 TRIALS = 10
 PASS = 8
 
@@ -23,7 +24,9 @@ class Option:
     motor_obj: Motor | None = None  # MOTORS にないモーター（実測値など）を使うとき
 
     def params(self, base: Params) -> Params:
-        return base.with_(tilt_deg=self.tilt_deg, drive_motor=self.motor_obj or MOTORS[self.motor])
+        q = base.with_(tilt_deg=self.tilt_deg, drive_motor=self.motor_obj or MOTORS[self.motor])
+        # 速度の上限はモーターごと：N20 は 1-a のファーム（0.8）、Pololu 136:1 は 1-b の設定（1.0）。実測などのモーターは base のまま
+        return q.with_(throttle=THROTTLE.get(self.motor, base.throttle)) if self.motor_obj is None else q
 
     @property
     def label(self) -> str:
