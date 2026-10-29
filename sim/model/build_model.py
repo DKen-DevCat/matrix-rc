@@ -25,43 +25,57 @@ MM = 1.0  # Blender の 1 単位を 1mm として組む（STL は mm、parts.jso
 
 # ---- 色（図用）
 C_PLATE_U, C_PLATE_L = (0.72, 0.82, 0.98, 1), (0.80, 0.82, 0.86, 1)
-C_BATT, C_BOARD, C_MOTOR, C_WHEEL, C_METAL, C_CAM = (0.95, 0.65, 0.30, 1), (0.30, 0.55, 0.35, 1), (0.35, 0.35, 0.40, 1), (0.20, 0.20, 0.22, 1), (0.75, 0.75, 0.78, 1), (0.85, 0.30, 0.30, 1)
+C_BATT, C_BOARD, C_MOTOR, C_WHEEL, C_METAL, C_CAM, C_SPRING = (0.95, 0.65, 0.30, 1), (0.30, 0.55, 0.35, 1), (0.35, 0.35, 0.40, 1), (0.20, 0.20, 0.22, 1), (0.75, 0.75, 0.78, 1), (0.85, 0.30, 0.30, 1), (0.55, 0.40, 0.85, 1)
 
 W = P.width / 2            # 27.5
-UZ0, UZ1 = P.upper_z       # 38, 52（上段の下面・上面）
-LZ0, LZ1 = P.lower_z       # 8, 20（下段の下面・上面）
+UZ0, UZ1 = P.upper_z       # 上段の板の下面・上面の目安（params。板の上に部品が載る）
+LZ0, LZ1 = P.lower_z       # 下段の下面・上面
 PLATE = 2.0                # 板の厚み mm
 REAR_L, REAR_R, FRONT = P.wheels[0], P.wheels[1], P.wheels[2]
-R = P.wheel_radius
+R, WW = P.wheel_radius, P.wheel_width
+AXLE_Z = R                 # 車軸の高さ（車輪の中心）
+TOP = UZ0 + PLATE          # 上段の板の上面
 
-# ---- 部品表：(名前, 形, 質量 g, 色)。形は ("box", (x0,x1), (y0,y1), (z0,z1)) か ("cyl_y", cx, (y0,y1), cz, r) か ("cyl_z", cx, cy, (z0,z1), r)
-# 置き場所は図面 C3 の上面図と部品配置図（docs/drawings/src/d2.py）から。質量は設計書② 4 章。
+# N20 ギアモーター：断面 12（幅）×10（高さ）、缶 15mm＋ギアボックス 9mm、3mm の D 軸。合計 約 10g（缶 6.5g、ギア 3.5g、推定）
+N20_W, N20_H, N20_CAN, N20_GEAR = 12.0, 10.0, 15.0, 9.0
+MZ = (AXLE_Z - N20_H / 2, AXLE_Z + N20_H / 2)          # 走行モーターの高さ（軸を車輪の中心に合わせる）
+L_IN = REAR_L.y - WW / 2                               # 左後輪の内側の面
+R_IN = REAR_R.y + WW / 2                               # 右後輪の内側の面（負）
+
+# ---- 部品表：(名前, 形, 質量 g, 色, 出典)
+# 形は ("box", (x0,x1), (y0,y1), (z0,z1)) か ("cyl_y", cx, (y0,y1), cz, r) か ("cyl_z", cx, cy, (z0,z1), r) か ("cyls_z", [(x,y)...], (z0,z1), r)
+# 出典の「推定」は実物を量ったら直す（make model → make report で作り直す）
 PARTS = [
-    # ---- 上段（小計 約 62g。設計書②：55〜65g）
-    ("upper_plate",   ("box", (P.upper_x[0], P.upper_x[1]), (-W, W), (UZ0, UZ0 + PLATE)), 20.0, C_PLATE_U),   # 板＋配線
-    ("upper_battery", ("box", (1.0, 51.0), (-16.0, 16.0), (UZ0 - 6.0, UZ0)), 17.0, C_BATT),                     # 50×32×6 を板の裏に。カム（x 54〜66）から 3mm 離す
-    ("upper_xiao",    ("box", (68.0, 85.5), (-11.5, 9.5), (UZ0 + PLATE, UZ0 + PLATE + 8.0)), 5.0, C_BOARD),     # XIAO＋カメラ
-    ("upper_lte",     ("box", (30.0, 62.0), (-16.5, 15.5), (UZ0 + PLATE, UZ0 + PLATE + 6.0)), 12.0, C_BOARD),   # LTE ボード＋アンテナ
-    ("upper_gps",     ("box", (4.0, 24.0), (2.5, 22.5), (UZ0 + PLATE, UZ0 + PLATE + 6.0)), 5.0, C_BOARD),
-    ("upper_switch",  ("box", (4.0, 24.0), (-8.5, -2.5), (UZ0 + PLATE, UZ0 + PLATE + 4.0)), 1.0, C_METAL),
-    ("upper_driver",  ("box", (4.0, 24.0), (-22.5, -12.5), (UZ0 + PLATE, UZ0 + PLATE + 4.0)), 2.0, C_BOARD),    # DRV8833＋MOSFET
-    # ---- 下段（小計 約 40g＋車輪 8g。設計書②：約 45g）
-    ("lower_plate",   ("box", (P.lower_x[0], P.lower_x[1]), (-P.lower_width / 2, P.lower_width / 2), (LZ1 - PLATE, LZ1)), 5.0, C_PLATE_L),
-    ("lower_motor_l", ("box", (REAR_L.x - 6.0, REAR_L.x + 6.0), (-3.5, 21.5), (LZ0, LZ1 - PLATE)), 10.0, C_MOTOR),   # 左の走行モーター（軸は y）
-    ("lower_motor_r", ("box", (REAR_R.x - 6.0, REAR_R.x + 6.0), (-21.5, 3.5), (LZ0, LZ1 - PLATE)), 10.0, C_MOTOR),   # 右の走行モーター
-    ("lower_jump_motor", ("box", (40.0, 65.0), (-6.0, 6.0), (LZ0, LZ1 - PLATE)), 10.0, C_MOTOR),                      # ジャンプ用（高減速）
-    ("lower_cam",     ("cyl_z", 60.0, 0.0, (LZ1, LZ1 + 2.0), 6.0), 2.0, C_CAM),                                       # 仮の置き場所（C4 で未確定）。電池の後ろ
-    ("lower_axle_f",  ("cyl_y", FRONT.x, (-21.5, 21.5), R, 1.5), 1.0, C_METAL),                                       # 前輪の軸
-    ("lower_pins",    None, 2.0, C_METAL),                                                                             # ガイドピン 4 本（下で作る）
-    # ---- 車輪（1 輪 2g）
-    ("wheel_rl", ("cyl_y", REAR_L.x, (REAR_L.y - 3.0, REAR_L.y + 3.0), R, R), 2.0, C_WHEEL),
-    ("wheel_rr", ("cyl_y", REAR_R.x, (REAR_R.y - 3.0, REAR_R.y + 3.0), R, R), 2.0, C_WHEEL),
-    ("wheel_fl", ("cyl_y", FRONT.x, (FRONT.y - 3.0, FRONT.y + 3.0), R, R), 2.0, C_WHEEL),
-    ("wheel_fr", ("cyl_y", P.wheels[3].x, (P.wheels[3].y - 3.0, P.wheels[3].y + 3.0), R, R), 2.0, C_WHEEL),
+    # ---- 上段
+    ("upper_plate",   ("box", (P.upper_x[0], P.upper_x[1]), (-W, W), (UZ0, TOP)), 20.0, C_PLATE_U, "推定（樹脂の板 約 12g＋配線）"),
+    ("upper_battery", ("box", (11.0, 62.0), (-17.25, 17.25), (UZ0 - 6.3, UZ0)), 23.0, C_BATT,
+     "EEMB LP603449-PCM-LD：34.5×51×6.3mm、セル 22g（メーカー）＋保護回路とリード 約 1g（推定）。板の裏、四隅のばねの内側"),
+    ("upper_xiao",    ("box", (68.0, 85.8), (-10.5, 10.5), (TOP, TOP + 9.0)), 5.0, C_BOARD, "XIAO ESP32S3 Sense：21×17.8mm の 2 段重ね、高さ 約 9mm、5g（推定）"),
+    ("upper_lte",     ("box", (31.0, 63.0), (-16.0, 16.0), (TOP, TOP + 6.0)), 12.0, C_BOARD, "LTE ボード＋アンテナ：30×30 を確保、12g（推定。型番未定）"),
+    # 後ろの部品は x 9 から（後ろのガイドピン x 6 とねじの頭 φ4 を避ける）
+    ("upper_gps",     ("box", (9.5, 29.5), (3.5, 23.5), (TOP, TOP + 6.0)), 5.0, C_BOARD, "GPS（MAX-M10S 基板）：20×20、5g（推定）"),
+    ("upper_switch",  ("box", (9.5, 29.5), (-8.5, -2.5), (TOP, TOP + 4.0)), 1.0, C_METAL, "電源スイッチ：1g（推定）"),
+    ("upper_driver",  ("box", (9.5, 29.5), (-23.5, -12.5), (TOP, TOP + 4.0)), 2.0, C_BOARD, "DRV8833＋MOSFET：2g（推定。1-b は小型のモジュール）"),
+    # ---- 下段
+    ("lower_plate",   ("box", (P.lower_x[0], P.lower_x[1]), (-P.lower_width / 2, P.lower_width / 2), (LZ1 - PLATE, LZ1)), 8.0, C_PLATE_L, "樹脂の板 85×41×2mm、密度 1.2 として 約 8g"),
+    ("lower_motor_l_can",  ("box", (REAR_L.x - N20_W / 2, REAR_L.x + N20_W / 2), (L_IN - 0.5 - N20_GEAR - N20_CAN, L_IN - 0.5 - N20_GEAR), MZ), 6.5, C_MOTOR, "N20 1000rpm 級（左）の缶：推定"),
+    ("lower_motor_l_gear", ("box", (REAR_L.x - N20_W / 2, REAR_L.x + N20_W / 2), (L_IN - 0.5 - N20_GEAR, L_IN - 0.5), MZ), 3.5, C_METAL, "N20（左）のギアボックス：推定"),
+    ("lower_motor_r_can",  ("box", (REAR_R.x - N20_W / 2, REAR_R.x + N20_W / 2), (R_IN + 0.5 + N20_GEAR, R_IN + 0.5 + N20_GEAR + N20_CAN), MZ), 6.5, C_MOTOR, "N20 1000rpm 級（右）の缶：推定"),
+    ("lower_motor_r_gear", ("box", (REAR_R.x - N20_W / 2, REAR_R.x + N20_W / 2), (R_IN + 0.5, R_IN + 0.5 + N20_GEAR), MZ), 3.5, C_METAL, "N20（右）のギアボックス：推定"),
+    ("lower_jump_can",  ("box", (40.0, 40.0 + N20_CAN), (-N20_W / 2, N20_W / 2), (LZ1 - PLATE - N20_H, LZ1 - PLATE)), 6.5, C_MOTOR, "ジャンプ用 N20（高減速）の缶：推定"),
+    ("lower_jump_gear", ("box", (40.0 + N20_CAN, 40.0 + N20_CAN + N20_GEAR), (-N20_W / 2, N20_W / 2), (LZ1 - PLATE - N20_H, LZ1 - PLATE)), 3.5, C_METAL, "ジャンプ用 N20 のギアボックス：推定"),
+    ("lower_cam",     ("cyl_z", 60.0, 0.0, (LZ1, LZ1 + 2.0), 6.0), 2.0, C_CAM, "カム：仮の形と位置（C4 で未確定）"),
+    ("lower_cam_switch", ("box", (62.0, 81.8), (7.0, 17.2), (LZ1, LZ1 + 6.4)), 1.0, C_METAL, "マイクロスイッチ SS-10GL13：19.8×6.4×10.2mm を寝かせて置く（高さ 6.4）、1g（推定）"),
+    ("lower_axle_f",  ("cyl_y", FRONT.x, (-FRONT.y + WW / 2, FRONT.y - WW / 2), AXLE_Z, 1.5), 1.0, C_METAL, "前輪の軸 φ3：推定"),
+    ("lower_pins",    ("cyls_z", list(P.springs), (LZ1, TOP + 4.0), 1.0), 2.0, C_METAL, "ガイドピン M2 ×4：推定"),
+    ("lower_springs", ("cyls_z", list(P.springs), (LZ1, UZ0), P.spring_od / 2), 2.0, C_SPRING, "ばね ×4（外径 7、0.5N/mm）：推定"),
+    # ---- 車輪（Pololu 32×7mm、1 輪 3.2g：メーカー）
+    ("wheel_rl", ("cyl_y", REAR_L.x, (REAR_L.y - WW / 2, REAR_L.y + WW / 2), AXLE_Z, R), 3.2, C_WHEEL, "Pololu 1087/1088"),
+    ("wheel_rr", ("cyl_y", REAR_R.x, (REAR_R.y - WW / 2, REAR_R.y + WW / 2), AXLE_Z, R), 3.2, C_WHEEL, "Pololu 1087/1088"),
+    ("wheel_fl", ("cyl_y", FRONT.x, (FRONT.y - WW / 2, FRONT.y + WW / 2), AXLE_Z, R), 3.2, C_WHEEL, "Pololu 1087/1088"),
+    ("wheel_fr", ("cyl_y", P.wheels[3].x, (P.wheels[3].y - WW / 2, P.wheels[3].y + WW / 2), AXLE_Z, R), 3.2, C_WHEEL, "Pololu 1087/1088"),
 ]
-PIN_XY = [(36.0, 17.5), (36.0, -17.5), (68.0, 17.5), (68.0, -17.5)]   # ばね＝ガイドピンの位置（C3）
-PIN_Z = (LZ1, UZ0 + PLATE + 4.0)                                       # 下段の上面から上段の板を貫いて 4mm 出る
-PASSES_THROUGH = {"lower_pins"}                                         # 上段を貫く部品（干渉の確認と下段の外形から外す）
+PASSES_THROUGH = {"lower_pins", "lower_springs"}       # 上段を貫く／上段に押されて縮む部品（干渉の確認と下段の外形から外す）
 
 
 # ---------------------------------------------------------------- メッシュを作る
@@ -121,8 +135,8 @@ def merge(geoms):
 
 
 def make_part(name, shape, color):
-    if name == "lower_pins":
-        v, f = merge([cyl_geom("z", x, y, PIN_Z, 1.0, 16) for x, y in PIN_XY])
+    if shape[0] == "cyls_z":
+        v, f = merge([cyl_geom("z", x, y, shape[2], shape[3], 24) for x, y in shape[1]])
     elif shape[0] == "box":
         v, f = box_geom(shape[1], shape[2], shape[3])
     elif shape[0] == "cyl_y":
@@ -168,8 +182,12 @@ def bbox(ob):
 
 def export(objects, out: Path):
     out.mkdir(parents=True, exist_ok=True)
+    prev = out / "parts.json"       # 部品名を変えたときに古い STL を残さない（前回このスクリプトが書いたものだけ消す）
+    if prev.exists():
+        for e in json.loads(prev.read_text()).get("parts", []):
+            (out / e["stl"]).unlink(missing_ok=True)
     entries = []
-    for name, _, mass_g, _ in PARTS:
+    for name, _, mass_g, _, source in PARTS:
         ob = objects[name]
         bpy.ops.object.select_all(action="DESELECT")
         ob.select_set(True)
@@ -182,6 +200,7 @@ def export(objects, out: Path):
             "com": [c / 1000 for c in com],
             "bbox_min": [c / 1000 for c in lo], "bbox_max": [c / 1000 for c in hi],
             "volume_mm3": round(vol, 1), "density_g_cm3": round(mass_g / vol * 1000, 2),
+            "source": source,
             **({"passes_through": True} if name in PASSES_THROUGH else {}),
         })
     (out / "parts.json").write_text(json.dumps({
@@ -228,6 +247,7 @@ def render(objects, out: Path):
         "front": ("ORTHO", (cx + 455.0, 0.0, cz), 90.0),
     }
     upper = [objects[n] for n, *_ in PARTS if n.startswith("upper_")]
+    springs = objects["lower_springs"]
 
     def shoot(name, view, suffix=""):
         kind, loc, ortho = views[view]
@@ -243,12 +263,16 @@ def render(objects, out: Path):
 
     for v in views:
         shoot(v, v)
-    # 縮めた状態（上段を stroke だけ下げる）
+    # 縮めた状態：上段を stroke だけ下げ、ばねを同じだけ縮める（下端は下段の板の上面に固定）
+    h = P.upper_z[0] - P.lower_z[1]
     for ob in upper:
         ob.location.z -= P.stroke
+    springs.scale.z = (h - P.stroke) / h
+    springs.location.z = P.lower_z[1] * (1 - springs.scale.z)
     shoot("side", "side", "_compressed")
     for ob in upper:
         ob.location.z += P.stroke
+    springs.scale.z, springs.location.z = 1.0, 0.0
 
 
 # ---------------------------------------------------------------- main
@@ -257,7 +281,7 @@ def main(argv):
     out = Path(argv[argv.index("--out") + 1]) if "--out" in argv else HERE / "export"
     rend = Path(argv[argv.index("--render") + 1]) if "--render" in argv else None
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    objects = {name: make_part(name, shape, color) for name, shape, _, color in PARTS}
+    objects = {name: make_part(name, shape, color) for name, shape, _, color, _ in PARTS}
     entries = export(objects, out)
     total = {r: sum(e["mass"] for e in entries if e["name"].startswith(r)) * 1000 for r in ("upper", "lower", "wheel")}
     print(f"wrote {out}/parts.json: {len(entries)} parts, upper {total['upper']:.1f}g, lower {total['lower']:.1f}g, wheels {total['wheel']:.1f}g")

@@ -3,16 +3,16 @@ from matrix_sim.checks import all_issues
 from matrix_sim.params import DESIGN
 
 
-def test_old_drawing_had_upper_deck_hitting_wheels_when_compressed():
-    # 2026-10-28 以前の C3：上段の下面 32mm − 縮め量 10mm ＝ 22mm、タイヤの上端は 26mm → 4mm 当たっていた
-    old = DESIGN.with_(upper_z=(32.0, 46.0))
+def test_old_heights_hit_the_32mm_wheels_when_compressed():
+    # 2026-10-28 の C3（上段の下面 38mm）のまま φ32 にすると、縮めた下面 28mm がタイヤの上端 32mm に 4mm 当たる
+    old = DESIGN.with_(upper_z=(38.0, 52.0))
     issues = all_issues(old)
     assert len(issues) == 4
     assert all(i.overlap_mm == 4 for i in issues)
 
 
 def test_current_drawing_clears_wheels():
-    # C3（上段を 6mm 上げた）：下面 38mm − 10mm ＝ 28mm > 26mm
+    # C3（2026-10-29、φ32 に合わせて上段の下面を 44mm に）：44 − 10 ＝ 34mm > 32mm
     assert all_issues(DESIGN) == []
 
 

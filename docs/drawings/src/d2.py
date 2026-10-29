@@ -59,113 +59,124 @@ def c3():
     s = Svg(1300, 1000)
     s.heading("C3  外形図（三面図）― 組み上げモデル",
               "上段＝電子部品と電池（重い）、下段＝足回り。上下の間のばねでジャンプする。寸法は目安で、Phase 1-b2 の試作後に確定する")
+    # 寸法の正本は sim/matrix_sim/params.py（2026-10-29：車輪 φ32、電池 LP603449、ばねを四隅に）
+    L, Wd = 91, 55
+    R, WW = 16, 7                      # 車輪 φ32 × 幅 7（Pololu 32×7mm）
+    rearL, rearR, front = 16, 30, 75   # 車輪の中心 x（左後輪・右後輪・前輪）
+    WY = 24                            # 車輪の中心 y（左右）
+    LZ0, LZ1 = 11, 23                  # 下段の下面・上面
+    UZ0, UZ1 = 44, 58                  # 上段の板の下面・上の部品の上端の目安
+    SPRINGS = [(6, 15.5), (6, -15.5), (86, 15.5), (86, -15.5)]
+    BATT = (11, 62, 34.5, 6.3)         # 電池 x0, x1, 幅, 厚さ
+    LX0, LX1, LW = 1, 90, 39           # 下段の板の前後の範囲と幅
+    STROKE = 10
+    yy = lambda y: 27.5 - y            # 中心線からの y（左が＋）を、図の上端からの距離に直す
     # ---------- top view
     x0, y0 = 120, 150
-    L, Wd = 91, 55
     s.text(x0, y0 - 18, "上面図（上段を外して足回りを破線で表示）", 14, weight="bold")
     s.rect(x0, y0, L * k, Wd * k, "#fbfcfe", INK, 2, 6)
-    # wheels (within width): wheel width 6, at edges
-    def wheel_top(cx, side):
-        y = y0 if side == "L" else y0 + (Wd - 6) * k
-        s.rect(cx - 13 * k, y, 26 * k, 6 * k, "#4b5563", INK, 1.2, 3)
-    rearL, rearR, front = 15, 29, 76
-    wheel_top(x0 + rearL * k, "L")
-    wheel_top(x0 + rearR * k, "R")
-    wheel_top(x0 + front * k, "L")
-    wheel_top(x0 + front * k, "R")
-    # motors staggered (hidden)
-    s.rect(x0 + (rearL - 6) * k, y0 + 6 * k, 12 * k, 25 * k, "none", GRAY_S, 1.3, 2, "5 3")
-    s.rect(x0 + (rearR - 6) * k, y0 + 24 * k, 12 * k, 25 * k, "none", GRAY_S, 1.3, 2, "5 3")
-    s.line(x0 + front * k, y0 + 6 * k, x0 + front * k, y0 + 49 * k, GRAY_S, 1.3, "8 3 2 3")
-    # jump motor + cam (hidden)
-    s.rect(x0 + 40 * k, y0 + 21.5 * k, 25 * k, 12 * k, "none", RED_S, 1.3, 2, "5 3")
-    s.circle(x0 + 58 * k, y0 + 27.5 * k, 2, RED_S, RED_S)
-    s.text(x0 + 52 * k, y0 + 19.5 * k, "ジャンプ用モーター＋カム", 10, "middle", fill=RED_S)
-    for gx, gy in [(36, 10), (36, 45), (68, 10), (68, 45)]:
-        s.circle(x0 + gx * k, y0 + gy * k, 3.5 * k, "none", PURPLE_S, 1.3, "3 2")
-    s.text(x0 + 36 * k, y0 + 10 * k - 18, "ばね×4", 10, "middle", fill=PURPLE_S)
-    s.text(x0 + (rearL + 7) * k, y0 + 19 * k, "左モーター", 9, fill=GRAY_S)
-    s.text(x0 + (rearR - 7) * k, y0 + 42 * k, "右モーター", 9, "end", fill=GRAY_S)
+    def wheel_top(cx, wy):
+        s.rect(x0 + (cx - R) * k, y0 + (yy(wy) - WW / 2) * k, 2 * R * k, WW * k, "#4b5563", INK, 1.2, 3)
+    wheel_top(rearL, WY); wheel_top(rearR, -WY); wheel_top(front, WY); wheel_top(front, -WY)
+    # motors staggered (hidden): N20 12×24、ギアボックス側を車輪に向ける
+    s.rect(x0 + (rearL - 6) * k, y0 + yy(WY - WW / 2 - 0.5) * k, 12 * k, 24 * k, "none", GRAY_S, 1.3, 2, "5 3")
+    s.rect(x0 + (rearR - 6) * k, y0 + yy(-WY + WW / 2 + 0.5 + 24) * k, 12 * k, 24 * k, "none", GRAY_S, 1.3, 2, "5 3")
+    s.line(x0 + front * k, y0 + yy(WY - WW / 2) * k, x0 + front * k, y0 + yy(-WY + WW / 2) * k, GRAY_S, 1.3, "8 3 2 3")
+    # jump motor + cam + switch (hidden)
+    s.rect(x0 + 40 * k, y0 + yy(6) * k, 24 * k, 12 * k, "none", RED_S, 1.3, 2, "5 3")
+    s.circle(x0 + 60 * k, y0 + 27.5 * k, 6 * k, "none", RED_S, 1.3, "3 2")
+    s.text(x0 + 50 * k, y0 + yy(6) * k - 6, "ジャンプ用モーター＋カム", 10, "middle", fill=RED_S)
+    s.rect(x0 + 62 * k, y0 + yy(17.2) * k, 19.8 * k, 10.2 * k, "none", GRAY_S, 1.2, 1, "4 2")
+    s.text(x0 + 72 * k, y0 + yy(17.2) * k - 4, "カム位置SW", 9, "middle", fill=GRAY_S)
+    for gx, gyy in SPRINGS:
+        s.circle(x0 + gx * k, y0 + yy(gyy) * k, 3.5 * k, "none", PURPLE_S, 1.3, "3 2")
+    s.text(x0 + 47 * k, y0 + yy(-15.5) * k + 4, "ばね×4（四隅の破線円）", 10, fill=PURPLE_S)
+    s.text(x0 + (rearL + 7) * k, y0 + yy(16) * k, "左モーター", 9, fill=GRAY_S)
+    s.text(x0 + (rearR + 7) * k, y0 + yy(-14) * k, "右モーター", 9, fill=GRAY_S)
     s.line(x0 + 95 * k, y0 + 27.5 * k, x0 + 110 * k, y0 + 27.5 * k, BLUE_S, 2.5, end="arrb")
     s.text(x0 + 96 * k, y0 + 25 * k, "前", 12, fill=BLUE_S, weight="bold")
     s.dim_h(x0, x0 + L * k, y0 + Wd * k + 40, "91（名刺の長辺）", y_from=y0 + Wd * k)
     s.dim_v(y0, y0 + Wd * k, x0 - 30, "55", x_from=x0)
-    s.dim_h(x0, x0 + rearL * k, y0 + Wd * k + 18, "15", y_from=y0 + Wd * k)
-    s.dim_h(x0 + rearL * k, x0 + rearR * k, y0 + Wd * k + 18, "14", y_from=y0 + Wd * k)
-    s.dim_h(x0 + rearR * k, x0 + front * k, y0 + Wd * k + 18, "47", y_from=y0 + Wd * k)
+    s.dim_h(x0, x0 + rearL * k, y0 + Wd * k + 18, f"{rearL}", y_from=y0 + Wd * k)
+    s.dim_h(x0 + rearL * k, x0 + rearR * k, y0 + Wd * k + 18, f"{rearR - rearL}", y_from=y0 + Wd * k)
+    s.dim_h(x0 + rearR * k, x0 + front * k, y0 + Wd * k + 18, f"{front - rearR}", y_from=y0 + Wd * k)
     # ---------- upper deck layout
     ux = 640
     s.text(ux, y0 - 18, "上段の部品配置（上から見た図）", 14, weight="bold")
     s.rect(ux, y0, L * k, Wd * k, "#fbfcfe", INK, 2, 6)
-    s.rect(ux + 68 * k, y0 + 18 * k, 17.5 * k, 21 * k, BLUE, BLUE_S, 1.5, 3)
-    s.text(ux + 76.75 * k, y0 + 29 * k, "XIAO", 11, "middle", "bold")
-    s.text(ux + 76.75 * k, y0 + 33.5 * k, "＋Sense", 9, "middle")
+    bx0, bx1, bw, bt = BATT
+    s.rect(ux + bx0 * k, y0 + yy(bw / 2) * k, (bx1 - bx0) * k, bw * k, "none", ORANGE_S, 1.4, 3, "6 3")
+    s.rect(ux + 68 * k, y0 + yy(10.5) * k, 17.8 * k, 21 * k, BLUE, BLUE_S, 1.5, 3)
+    s.text(ux + 76.9 * k, y0 + 26 * k, "XIAO", 11, "middle", "bold")
+    s.text(ux + 76.9 * k, y0 + 30.5 * k, "＋Sense", 9, "middle")
     s.rect(ux + 87 * k, y0 + 23.5 * k, 3 * k, 8 * k, "#1f2933", INK, 1, 1)
     s.text(ux + 92 * k, y0 + 21 * k, "カメラ", 10)
-    s.rect(ux + 30 * k, y0 + 12 * k, 32 * k, 32 * k, PURPLE, PURPLE_S, 1.5, 3, "6 3")
-    s.lines(ux + 46 * k, y0 + 26 * k, ["LTE ボード", "（30×30 を確保）"], 10, "middle")
-    s.rect(ux + 4 * k, y0 + 5 * k, 20 * k, 20 * k, GREEN, GREEN_S, 1.5, 3)
-    s.lines(ux + 14 * k, y0 + 14 * k, ["GPS", "（空向き）"], 10, "middle")
-    s.rect(ux + 4 * k, y0 + 30 * k, 20 * k, 6 * k, GRAY, GRAY_S, 1.2, 2)
-    s.text(ux + 14 * k, y0 + 34.5 * k, "電源SW", 9, "middle")
-    s.rect(ux + 4 * k, y0 + 40 * k, 20 * k, 10 * k, GRAY, GRAY_S, 1.2, 2)
-    s.text(ux + 14 * k, y0 + 46 * k, "DRV・MOSFET", 9, "middle")
+    s.rect(ux + 31 * k, y0 + yy(16) * k, 32 * k, 32 * k, PURPLE, PURPLE_S, 1.5, 3, "6 3")
+    s.lines(ux + 47 * k, y0 + 26 * k, ["LTE ボード", "（30×30 を確保）"], 10, "middle")
+    s.rect(ux + 9.5 * k, y0 + yy(23.5) * k, 20 * k, 20 * k, GREEN, GREEN_S, 1.5, 3)
+    s.lines(ux + 19.5 * k, y0 + yy(13.5) * k, ["GPS", "（空向き）"], 10, "middle")
+    s.rect(ux + 9.5 * k, y0 + yy(-2.5) * k, 20 * k, 6 * k, GRAY, GRAY_S, 1.2, 2)
+    s.text(ux + 19.5 * k, y0 + yy(-6.5) * k, "電源SW", 9, "middle")
+    s.rect(ux + 9.5 * k, y0 + yy(-12.5) * k, 20 * k, 11 * k, GRAY, GRAY_S, 1.2, 2)
+    s.text(ux + 19.5 * k, y0 + yy(-19) * k, "DRV・MOSFET", 9, "middle")
     s.rect(ux + 64 * k, y0 + 45 * k, 6 * k, 6 * k, "#fff", GRAY_S, 1, 1)
     s.text(ux + 71 * k, y0 + 50 * k, "LED", 9)
     s.rect(ux + 3 * k, y0 + 1.5 * k, 85 * k, 2 * k, "#ede9fe", PURPLE_S, 1, 1)
     s.text(ux + 45 * k, y0 - 2, "LTE フレキアンテナ（側面上縁に沿わせる）", 9, "middle", fill=PURPLE_S)
-    s.text(ux + 45 * k, y0 + Wd * k + 20, "電池（50×34×6）は上段の裏側に固定。USB-C は後ろ向き", 11, "middle", fill=ORANGE_S)
+    s.text(ux + 45 * k, y0 + Wd * k + 20, "破線の橙：電池 LP603449（34.5×51×6.3、約 23g）を板の裏に固定。USB-C は後ろ向き", 11, "middle", fill=ORANGE_S)
     # ---------- side view
     gy = 830
     sx = 120
-    s.text(sx, gy - 230, "側面図（左から見た図・伸びた状態）", 14, weight="bold")
+    s.text(sx, gy - 250, "側面図（左から見た図・伸びた状態）", 14, weight="bold")
     s.line(sx - 30, gy, sx + 100 * k, gy, INK, 1.2)
     s.add(f'<rect x="{sx - 30}" y="{gy}" width="{100 * k + 30}" height="10" fill="url(#hatch)"/>')
-    r = 13
     for wx in (rearL, front):
-        s.wheel_side(sx + wx * k, gy - r * k, r * k)
+        s.wheel_side(sx + wx * k, gy - R * k, R * k)
     # lower chassis
-    lc_top, lc_bot = gy - 20 * k, gy - 8 * k
-    s.rect(sx + 3 * k, lc_top, 85 * k, 12 * k, "#e5e7eb", INK, 1.5, 3)
+    lc_top = gy - LZ1 * k
+    s.rect(sx + LX0 * k, lc_top, (LX1 - LX0) * k, (LZ1 - LZ0) * k, "#e5e7eb", INK, 1.5, 3)
     s.text(sx + 52 * k, lc_top + 8 * k, "下段（足回り・モーター・カム）", 11, "middle")
-    # springs
-    up_bot = gy - 38 * k
-    for gxx in (36, 68):
+    # springs（四隅）とガイドピン
+    up_bot = gy - UZ0 * k
+    for gxx in (5, 87):
         s.spring(sx + gxx * k, up_bot, lc_top, 7, 5, PURPLE_S, 1.6)
-        s.line(sx + gxx * k + 14, up_bot, sx + gxx * k + 14, lc_top + 4 * k, GRAY_S, 1, "3 2")
+        s.line(sx + gxx * k, up_bot - 6 * k, sx + gxx * k, lc_top, GRAY_S, 1, "3 2")
+    # 電池（板の裏）
+    s.rect(sx + bx0 * k, up_bot, (bx1 - bx0) * k, bt * k, "#fdebd3", ORANGE_S, 1.2, 2, "5 3")
+    s.text(sx + (bx0 + bx1) / 2 * k, up_bot + 4.6 * k, "電池", 10, "middle", fill=ORANGE_S)
     # upper body
-    s.rect(sx + 1 * k, up_bot - 14 * k, 89 * k, 14 * k, "#e8f0fe", BLUE_S, 1.8, 4)
-    s.text(sx + 45 * k, up_bot - 6 * k, "上段（電子部品・電池）", 11, "middle")
+    s.rect(sx + 1 * k, up_bot - (UZ1 - UZ0) * k, 89 * k, (UZ1 - UZ0) * k, "#e8f0fe", BLUE_S, 1.8, 4)
+    s.text(sx + 45 * k, up_bot - 6 * k, "上段（電子部品）", 11, "middle")
     s.rect(sx + 87 * k, up_bot - 11 * k, 3 * k, 6 * k, "#1f2933", INK, 1, 1)
     s.line(sx + 90 * k, up_bot - 8 * k, sx + 100 * k, up_bot - 8 * k, BLUE_S, 1.2, "4 3", end="arrb")
-    s.dim_v(gy, up_bot - 14 * k, sx + 95 * k + 30, "約52（伸び）", x_from=sx + 90 * k)
-    s.dim_v(up_bot, lc_top, sx - 30, "18", x_from=sx + 3 * k)
-    s.dim_v(gy, gy - r * k, sx - 70, "13", x_from=sx + rearL * k)
-    s.text(sx + 5 * k, gy + 30, "タイヤ φ26 × 幅6", 11, fill=MUTED)
+    s.dim_v(gy, up_bot - (UZ1 - UZ0) * k, sx + 95 * k + 30, f"約{UZ1}（伸び）", x_from=sx + 90 * k)
+    s.dim_v(up_bot, lc_top, sx - 30, f"{UZ0 - LZ1}", x_from=sx + 3 * k)
+    s.dim_v(gy, gy - R * k, sx - 70, f"{R}", x_from=sx + rearL * k)
+    s.text(sx + 5 * k, gy + 30, "タイヤ φ32 × 幅7（Pololu 32×7mm）", 11, fill=MUTED)
     # ---------- front view
     fx = 760
-    s.text(fx, gy - 230, "正面図", 14, weight="bold")
+    s.text(fx, gy - 250, "正面図", 14, weight="bold")
     s.line(fx - 20, gy, fx + 55 * k + 20, gy, INK, 1.2)
     s.add(f'<rect x="{fx - 20}" y="{gy}" width="{55 * k + 40}" height="10" fill="url(#hatch)"/>')
-    s.rect(fx, gy - 26 * k, 6 * k, 26 * k, "#4b5563", INK, 1.2, 3)
-    s.rect(fx + 49 * k, gy - 26 * k, 6 * k, 26 * k, "#4b5563", INK, 1.2, 3)
-    s.rect(fx + 7 * k, lc_top, 41 * k, 12 * k, "#e5e7eb", INK, 1.4, 3)
-    s.rect(fx, up_bot - 14 * k, 55 * k, 14 * k, "#e8f0fe", BLUE_S, 1.8, 4)
-    s.spring(fx + 12 * k, up_bot, lc_top, 6, 5, PURPLE_S, 1.4)
-    s.spring(fx + 43 * k, up_bot, lc_top, 6, 5, PURPLE_S, 1.4)
+    s.rect(fx, gy - 2 * R * k, WW * k, 2 * R * k, "#4b5563", INK, 1.2, 3)
+    s.rect(fx + (55 - WW) * k, gy - 2 * R * k, WW * k, 2 * R * k, "#4b5563", INK, 1.2, 3)
+    s.rect(fx + (27.5 - LW / 2) * k, lc_top, LW * k, (LZ1 - LZ0) * k, "#e5e7eb", INK, 1.4, 3)
+    s.rect(fx + yy(bw / 2) * k, up_bot, bw * k, bt * k, "#fdebd3", ORANGE_S, 1.2, 2, "5 3")
+    s.rect(fx, up_bot - (UZ1 - UZ0) * k, 55 * k, (UZ1 - UZ0) * k, "#e8f0fe", BLUE_S, 1.8, 4)
+    s.spring(fx + yy(15.5) * k, up_bot, lc_top, 6, 5, PURPLE_S, 1.4)
+    s.spring(fx + yy(-15.5) * k, up_bot, lc_top, 6, 5, PURPLE_S, 1.4)
     s.circle(fx + 27.5 * k, up_bot - 8 * k, 3 * k, "#1f2933", INK, 1)
     s.text(fx + 27.5 * k, up_bot - 16 * k, "カメラ", 10, "middle")
     s.dim_h(fx, fx + 55 * k, gy + 34, "55", y_from=gy)
     # notes
     s.note_box(640, 418, 640, [
-        "・左右の走行モーターは前後にずらして置く（2個を一直線に並べると幅が足りない）。",
+        "・左右の走行モーターは前後にずらして置く（一直線だと幅が足りない）。前輪は自由回転、スキッドステア。",
         "・重い部品（電池・LTE）は上段に載せる。上段が重いほど高く跳べる。",
-        "・前輪は自由回転。左右の回転差で向きを変える（スキッドステア）。",
-        "・上段と下段はガイドピン（M2 ねじ）で上下だけ動く。ねじの頭が伸びきりのストッパー。",
-        "・目標の重さは約 100g（内訳は設計書②の重量表）。",
-        "・上下のすき間 18mm は縮めると 8mm（縮めた上段がタイヤに当たらない高さ。10-28 に 6mm 上げた）。",
+        "・上段と下段はガイドピン（M2 ねじ）で上下だけ動く。ばねとピンは四隅（板の裏の電池と車輪を避ける）。",
+        "・重さは約 127g（部品の型番で見直した内訳は設計書②の重量表。見積もり 100〜110g から増えた）。",
+        f"・上下のすき間 {UZ0 - LZ1}mm は縮めると {UZ0 - LZ1 - STROKE}mm（縮めた上段の下面 {UZ0 - STROKE}mm がタイヤ上端 {2 * R}mm に当たらない）。",
         "  10mm リフトのカム（直径 30mm 級）の収まり場所は未確定。1-b2 で「縮めた状態」の側面図で確定。",
-    ], "設計メモ", 12)
+    ], "設計メモ（2026-10-29：車輪 φ32・電池 LP603449）", 12)
     s.title_block("C3", "外形図（組み上げモデル 三面図）", "約 1:2.5（画面上）")
     return s
 
@@ -229,14 +240,14 @@ def c4():
             s.text(px + 195, 555, "フォロワーはカムの細い側。スイッチでカム位置を検知", 11, "middle", fill=MUTED)
     # calc table
     s.note_box(40, 600, 820, [
-        "目標：3cm の段差を越える → 跳躍高さ 4cm 以上（余裕込み）。機体の重さ m＝約100g（上段 約60g・下段 約40g）。",
-        "必要なエネルギー：m·g·h ＝ 0.1 × 9.8 × 0.04 ≒ 0.04J。上段が下段を引っ張る時の損失（約4割）と余裕を見て、ばねに 約0.1J を蓄える。",
+        "目標：3cm の段差を越える → 跳躍高さ 4cm 以上（余裕込み）。機体の重さ m＝約127g（上段 約68g・下段 約59g。10-29 に型番で見直し）。",
+        "必要なエネルギー：m·g·h ＝ 0.127 × 9.8 × 0.04 ≒ 0.05J。上段が下段を引っ張る時の損失（約5割）があり、ばねの 0.1J では余裕が少ない。",
         "ばね：4本 × ばね定数 約0.5N/mm × 縮め量 10mm → 蓄えるエネルギー ＝ 4 × ½ × 500 × 0.01² ＝ 0.1J。縮めきった時の力は合計 約20N。",
         "カムを回す力：トルク ≒ 力 × 半径の増え方（10mm ÷ 約5.2rad）＝ 20N × 1.9mm ≒ 0.04N·m。摩擦込みで 約0.08N·m。",
         "　→ N20 の高減速モーター（1000:1 前後）で回せる見込み。1回転 約3〜4秒 ＝ ジャンプの「チャージ時間」になる。",
-        "跳躍の見積もり：上段の速さ √(2×0.1÷0.06) ≒ 1.8m/s → 下段を引っ張った後 約1.1m/s → 高さ 約6cm（損失を引くと 4〜5cm）。",
+        "跳躍の見積もり：上段の速さ √(2×0.1÷0.068) ≒ 1.7m/s → 下段を引っ張った後 約0.92m/s → 高さ 約4.3cm（物理演算では 3.7cm）。",
         "前進も要る：滞空 約0.16秒で車体 91mm が段差を通り過ぎるには 0.5m/s 以上（概算 91÷0.16≒0.57m/s）→ 1000rpm 級 N20。",
-        "　→ 3.7V × デューティ 0.8 で 約0.67m/s、真上に跳ぶ。物理演算 10-28：300rpm は 0/10、1000rpm 級は 30〜50mm 手前で 8〜10/10。",
+        "　→ φ32 で 3.7V × デューティ 0.8 で 約0.83m/s、真上に跳ぶ。物理演算 10-29（127g）：跳躍 37mm、40mm 手前の 1 点だけ 8/10（要対策）。",
         "ばねの寸法：0.5N/mm を線径 0.55mm で作ると約15巻き、密着高さ 約9mm。自由長 15mm では 10mm 縮まない → 自由長 25mm 以上。",
         "※ 数値は計算上の目安。Phase 1-b2 の単体試作で、ばねの強さと縮め量を実測して決める。",
     ], "設計計算", 12)
