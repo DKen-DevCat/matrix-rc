@@ -24,6 +24,9 @@ aside { display: flex; flex-direction: column; gap: 16px; }
 .keys { display: grid; grid-template-columns: repeat(3, 56px); gap: 6px; justify-content: center; }
 kbd { display: grid; place-items: center; height: 48px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); font-size: 18px; }
 kbd.space { grid-column: 1 / 4; }
+.enhance { display: flex; flex-direction: column; gap: 6px; }
+.enhance label { display: flex; gap: 8px; align-items: center; }
+.enhance select { flex: 1; }
 kbd.on { background: var(--accent); color: #000; border-color: var(--accent); }
 .stats { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; }
 dt { color: var(--muted); }

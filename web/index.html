@@ -31,9 +31,17 @@
       <kbd data-k="Space" class="space">Space</kbd>
     </div>
 
+    <div class="enhance">
+      <label>高画質化 <select id="enhance"><option value="off">オフ</option></select></label>
+      <label><input type="checkbox" id="compare"> 左右で比較</label>
+      <p class="note">技術検証枠 E1（設計書④）。V キーで切り替え。比較は左がオフ、右が選択中の処理。</p>
+    </div>
+
     <dl class="stats">
       <dt>往復遅延</dt><dd id="rtt">—</dd>
       <dt>映像</dt><dd id="fps">—</dd>
+      <dt>画像処理</dt><dd id="enh">—</dd>
+      <dt>送信間隔</dt><dd id="txgap">—</dd>
       <dt>電池</dt><dd id="vbat">—</dd>
       <dt>受信強度</dt><dd id="rssi">—</dd>
       <dt>ジャンプ</dt><dd id="jump">—</dd>
@@ -41,6 +49,8 @@
     </dl>
 
     <button id="audio" disabled>音声を聞く</button>
+    <!-- 机上検証用（PC 内のサーバのときだけ表示）。E1 の検証が終わったら削除する -->
+    <button id="grab" hidden>このフレームを 1 枚保存（机上用）</button>
     <p class="note">録画・録音はしません。音声はこの画面で再生するだけです。</p>
 
     <div class="stopwatch">
